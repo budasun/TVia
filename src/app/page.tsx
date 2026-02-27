@@ -325,6 +325,7 @@ export default function Home() {
             totalItems={searchResults.length}
             allMedia={searchResults}
             onSelectMedia={handleSelectMedia}
+            category={selectedCategory}
             onInternalSearch={(query) => { 
               handleSearch(query, 'all', { duration: 'any', uploadDate: 'any' }); 
               handleClosePlayer(); 

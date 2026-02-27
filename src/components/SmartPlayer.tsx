@@ -32,6 +32,7 @@ interface SmartPlayerProps {
   allMedia?: UnifiedMedia[];
   onSelectMedia?: (media: UnifiedMedia) => void;
   onInternalSearch?: (query: string) => void;
+  category?: string;
 }
 
 function getYouTubeId(url: string): string | null {
@@ -98,7 +99,8 @@ export default function SmartPlayer({
   totalItems,
   allMedia = [],
   onSelectMedia,
-  onInternalSearch
+  onInternalSearch,
+  category
 }: SmartPlayerProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -443,6 +445,12 @@ export default function SmartPlayer({
   const handleVideoPause = () => setIsPaused(true);
   const handleVideoPlay = () => setIsPaused(false);
 
+  const handleVideoStateChange = (event: any) => {
+    if (event.data === 0 && category === 'entretenimiento' && onNext) {
+      setTimeout(() => onNext(), 1500);
+    }
+  };
+
   const handleVideoReady = (e: any) => {
     setYoutubePlayer(e.target);
   };
@@ -549,6 +557,7 @@ export default function SmartPlayer({
                     onPause={handleVideoPause}
                     onPlay={handleVideoPlay}
                     onReady={handleVideoReady}
+                    onStateChange={handleVideoStateChange}
                     className="absolute inset-0 w-full h-full"
                   />
                   <AnimatePresence>
