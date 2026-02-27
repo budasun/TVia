@@ -147,6 +147,8 @@ export default function SmartPlayer({
   useEffect(() => {
     if (!youtubePlayer) return;
 
+    const isEntertainment = category === 'entretenimiento';
+
     // 1. Restaurar volumen al cargar un nuevo video
     try {
       const savedVolume = localStorage.getItem('videoschool_volume');
@@ -157,7 +159,19 @@ export default function SmartPlayer({
       else if (savedMuted === 'false') youtubePlayer.unMute();
     } catch (e) { console.log('Esperando reproductor...'); }
 
-    // 2. Guardar preferencias en segundo plano
+    // 2. Restaurar fullscreen solo para entretenimiento
+    if (isEntertainment) {
+      const savedFullscreen = localStorage.getItem('videoschool_fullscreen');
+      if (savedFullscreen === 'true') {
+        const playerContainer = document.querySelector('.smart-player-container');
+        if (playerContainer && !document.fullscreenElement) {
+          playerContainer.requestFullscreen().catch(() => {});
+        }
+        localStorage.removeItem('videoschool_fullscreen');
+      }
+    }
+
+    // 3. Guardar preferencias en segundo plano
     const interval = setInterval(() => {
       try {
         if (typeof youtubePlayer.getVolume === 'function') {
@@ -168,7 +182,7 @@ export default function SmartPlayer({
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [youtubePlayer, media?.id]);
+  }, [youtubePlayer, media?.id, category]);
 
   useEffect(() => {
     if (media?.id) {
@@ -447,6 +461,14 @@ export default function SmartPlayer({
 
   const handleVideoStateChange = (event: any) => {
     if (event.data === 0 && category === 'entretenimiento' && onNext) {
+      if (youtubePlayer) {
+        localStorage.setItem('videoschool_volume', youtubePlayer.getVolume().toString());
+        localStorage.setItem('videoschool_muted', youtubePlayer.isMuted().toString());
+      }
+      const fullscreenElem = document.fullscreenElement;
+      if (fullscreenElem) {
+        localStorage.setItem('videoschool_fullscreen', 'true');
+      }
       setTimeout(() => onNext(), 1500);
     }
   };
@@ -470,7 +492,7 @@ export default function SmartPlayer({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-zinc-900 flex"
+      className="fixed inset-0 z-50 bg-zinc-900 flex smart-player-container"
     >
       {/* CONTENEDOR PRINCIPAL - Desktop: flex-row, Mobile: flex-col */}
       <div className="flex flex-col lg:flex-row h-full w-full">
