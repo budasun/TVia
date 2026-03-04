@@ -269,6 +269,10 @@ const SIMPSONS_EPISODES: UnifiedMedia[] = [
   { id: 'simpsons-32x01', title: '32x01 - Los Simpsons Temporada 32', source: 'mega', url: 'https://mega.nz/embed/aB4WySJb#1e6DeK6quA2ETrw4TggPn-VEtCjvlphDEYpotY24naU', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 32 Episode 1', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
 ];
 
+const PELICULAS: UnifiedMedia[] = [
+  { id: 'pelicula-adaline', title: 'EL SECRETO DE ADALINE', source: 'youtube', url: 'https://drive.google.com/file/d/0B95aowXSQsJ8OVhKbEV0dzFmUk0/view?resourcekey=0-fLr1pEFc7Wl894xVapGbtQ', thumbnail: 'https://es.web.img3.acsta.net/pictures/15/05/14/17/04/007466.jpg', description: 'EL SECRETO DE ADALINE - Película', category: 'pelicula', tags: [], author: 'Desconocido', duration: '112 min' },
+];
+
 const CATEGORY_QUERIES: Record<string, string[]> = {
   documental: ['documental completo', 'documentary', 'history documentary'],
   ciencia: ['ciencia explicada', 'science documentary', 'physics universe'],
@@ -514,6 +518,10 @@ export async function GET(request: Request) {
         publishedAt: new Date().toISOString(),
         durationSeconds: 0,
       }));
+
+      if (category === 'pelicula' && query === '') {
+        allVideos = [...PELICULAS, ...allVideos];
+      }
 
       searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
       console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
