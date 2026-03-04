@@ -53,6 +53,14 @@ function getVimeoId(url: string): string | null {
   return match ? match[1] : null;
 }
 
+function getDriveEmbedUrl(url: string): string | null {
+  const match = url.match(/drive\.google\.com\/file\/d\/([^/]+)\//);
+  if (match) {
+    return `https://drive.google.com/file/d/${match[1]}/preview`;
+  }
+  return null;
+}
+
 function SuggestedVideoCard({ media, onClick }: { media: UnifiedMedia; onClick: () => void }) {
   return (
     <motion.button
@@ -636,7 +644,7 @@ export default function SmartPlayer({
                 </>
               ) : media?.url ? (
                 <iframe
-                  src={media.url}
+                  src={getDriveEmbedUrl(media.url) || media.url}
                   className="absolute inset-0 w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -916,8 +924,8 @@ function ChatPanel({
             >
               <div
                 className={`max-w-[85%] p-3 border-2 ${message.role === 'user'
-                    ? 'bg-cyan-400 border-zinc-900 text-zinc-900'
-                    : 'bg-zinc-100 border-zinc-300 text-zinc-800'
+                  ? 'bg-cyan-400 border-zinc-900 text-zinc-900'
+                  : 'bg-zinc-100 border-zinc-300 text-zinc-800'
                   }`}
               >
                 {message.role === 'user' ? (
