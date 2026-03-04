@@ -7,6 +7,7 @@ const CACHE_DURATION = 1000 * 60 * 60 * 2;
 
 const SIMPSONS_EPISODES: UnifiedMedia[] = [
   { id: 'futurama-10x01', title: '10x01 - Futurama', source: 'youtube', url: 'https://cine-seguro.xyz/stream/e0bhsdx0v.mp4', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 10 Episode 1', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-10x02', title: '10x02 - Futurama', source: 'youtube', url: 'https://cine-seguro.xyz/stream/eudai7ja7.mp4', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 10 Episode 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-09x25', title: '09x25 - Marge, ¿puedo dormir con el perro?', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxrk6YPxR6NP1lo9G_2TpqtfACD2vmyYSCushc1e9Q2DZhCV8g3XuK_UHBxtjSp5sEB-27WAmWsfmeuwmFnIiWBnUKSC-SgJr5hvRq_mZnN6rILPrXcCVwCHuQai-fZhz8hX04', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 9 Episode 25', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-09x24', title: '09x24 - Hemos perdido a nuestra Lisa', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dx2cHE6ePmZvqlLWVu1-ZZ2R4U5uN52-pvgnUgyJk4rbeLfGZ5Ugil0BW_V6B1eHBVqWmdFYusggjX-V156wjr6Ud-bzWuMDF67k9lvQbDNuH6MkfkLOzXm-PGhfhy9E93IyQM', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 9 Episode 24', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-09x23', title: '09x23 - El rey de la colina', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dwDqfzISFmsRYzy13luFeDIl1oiL93YHakOgaHpX0f7lLr0futSkCEr4bHaxTHThceAxLjI_iPgdYRWnBDLcyNdI0deaPtfjmYcMmRIdA9EB43LRbLJOSNIt2C7kiOrNJHBl3o', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 9 Episode 23', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
@@ -83,7 +84,7 @@ const CATEGORY_QUERIES: Record<string, string[]> = {
   ciencia: ['ciencia explicada', 'science documentary', 'physics universe'],
   pelicula: ['pelicula completa', 'short film', 'cortometraje'],
   opera: ['opera completa', 'classical music concert', 'symphony orchestra'],
-  podcast: ['entrevista completa', 'videopodcast', 'charla'], 
+  podcast: ['entrevista completa', 'videopodcast', 'charla'],
   tutorial: ['tutorial completo', 'curso gratis', 'masterclass'],
   conferencia: ['conference talk', 'conferencia', 'presentacion'],
   concepto: ['full concert HD', 'concierto en vivo', 'live concert full', 'classical concert'],
@@ -123,7 +124,7 @@ export async function GET(request: Request) {
     const query = searchParams.get('q')?.trim() || '';
     const category = (searchParams.get('category') as CategoryFilter) || 'all';
     const page = parseInt(searchParams.get('pageToken') || '0', 10);
-    
+
     const cacheKey = `${query}-${category}`.toLowerCase();
     let allVideos: UnifiedMedia[] = [];
 
@@ -131,9 +132,9 @@ export async function GET(request: Request) {
       allVideos = searchCache.get(cacheKey)!.data;
     } else if (category === 'entretenimiento') {
       console.log('🕵️ Mezclando Blogger y YouTube Extendido para Entretenimiento...');
-      
+
       let youtubeVideos: any[] = [];
-      
+
       if (query === '') {
         // Matriz de Búsqueda Masiva para Entretenimiento
         const entertainmentQueries = [
@@ -146,37 +147,37 @@ export async function GET(request: Request) {
           'capítulos completos malcolm el de en medio latino',
           'capítulos completos rick and morty latino'
         ];
-        
+
         console.log(`🚀 Lanzando ${entertainmentQueries.length} hilos de búsqueda para Entretenimiento...`);
-        const searchPromises = entertainmentQueries.map(q => 
+        const searchPromises = entertainmentQueries.map(q =>
           YouTube.search(q, { limit: 30, type: "video" }).catch(() => [])
         );
-        
+
         const resultsMatrix = await Promise.all(searchPromises);
         const rawResults = resultsMatrix.flat();
-        
+
         const uniqueMap = new Map();
         rawResults.forEach((v: { id?: string }) => {
           if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v);
         });
-        
+
         youtubeVideos = Array.from(uniqueMap.values());
-        
+
         // Filtro Anti-Reacciones y Lista Negra de Canales
         youtubeVideos = youtubeVideos.filter((v: any) => {
           const channelName = (v.channel?.name || '').toLowerCase();
           const title = (v.title || '').toLowerCase();
-          
+
           // Palabras bloqueadas en títulos o nombres de canal
           const blockedKeywords = ['reaccion', 'reacción'];
           // Lista negra de canales específicos (en minúsculas)
           const blockedChannels = ['reichanneltvv', 'loren reacciona', 'luigi primetv', 'some lopez', 'kira', 'kiradad', 'maria perez'];
-          
-          const hasBlockedKeyword = blockedKeywords.some(keyword => 
+
+          const hasBlockedKeyword = blockedKeywords.some(keyword =>
             channelName.includes(keyword) || title.includes(keyword)
           );
-          
-          const isBlockedChannel = blockedChannels.some(channel => 
+
+          const isBlockedChannel = blockedChannels.some(channel =>
             channelName.includes(channel)
           );
 
@@ -190,35 +191,35 @@ export async function GET(request: Request) {
         ];
         const resultsMatrix = await Promise.all(searchPromises);
         const rawResults = resultsMatrix.flat();
-        
+
         const uniqueMap = new Map();
         rawResults.forEach((v: { id?: string }) => {
           if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v);
         });
         youtubeVideos = Array.from(uniqueMap.values());
-        
+
         // Filtro Anti-Reacciones y Lista Negra de Canales
         youtubeVideos = youtubeVideos.filter((v: any) => {
           const channelName = (v.channel?.name || '').toLowerCase();
           const title = (v.title || '').toLowerCase();
-          
+
           // Palabras bloqueadas en títulos o nombres de canal
           const blockedKeywords = ['reaccion', 'reacción'];
           // Lista negra de canales específicos (en minúsculas)
           const blockedChannels = ['reichanneltvv', 'loren reacciona', 'luigi primetv', 'some lopez', 'kira', 'kiradad', 'maria perez'];
-          
-          const hasBlockedKeyword = blockedKeywords.some(keyword => 
+
+          const hasBlockedKeyword = blockedKeywords.some(keyword =>
             channelName.includes(keyword) || title.includes(keyword)
           );
-          
-          const isBlockedChannel = blockedChannels.some(channel => 
+
+          const isBlockedChannel = blockedChannels.some(channel =>
             channelName.includes(channel)
           );
 
           return !hasBlockedKeyword && !isBlockedChannel;
         });
       }
-      
+
       // Mapear al formato unificado de VIDEOSCHOOL
       youtubeVideos = youtubeVideos.map((v: any) => ({
         id: v.id || '',
@@ -235,9 +236,9 @@ export async function GET(request: Request) {
         publishedAt: new Date().toISOString(),
         durationSeconds: 0,
       }));
-      
+
       allVideos = query === '' ? [...SIMPSONS_EPISODES, ...youtubeVideos] : youtubeVideos;
-      
+
       searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
       console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
     } else {
@@ -260,10 +261,10 @@ export async function GET(request: Request) {
 
       // 3. MATRIZ DE VIAJE EN EL TIEMPO (El multiplicador masivo)
       // Añadimos sufijos para romper la "Burbuja del Top 20" de YouTube
-      const modifiers = ['', '2026', '2025', 'nuevo']; 
-      
+      const modifiers = ['', '2026', '2025', 'nuevo'];
+
       // Multiplicamos las 3 búsquedas base por los 4 modificadores = 12 Hilos de búsqueda
-      const searchStrings = baseStrings.flatMap(base => 
+      const searchStrings = baseStrings.flatMap(base =>
         modifiers.map(mod => mod ? `${base} ${mod}` : base)
       );
 
@@ -271,16 +272,16 @@ export async function GET(request: Request) {
 
       // 3.5 EXTRACCIÓN MASIVA 
       // Usamos limit: 30 por hilo. 12 hilos * 30 = 360 videos crudos solicitados.
-      const searchPromises = searchStrings.map(searchStr => 
+      const searchPromises = searchStrings.map(searchStr =>
         YouTube.search(searchStr, { limit: 30, type: "video" }).catch(() => [])
       );
-      
+
       const resultsMatrix = await Promise.all(searchPromises);
       const rawResults = resultsMatrix.flat();
 
       const uniqueMap = new Map();
       const stopWords = new Set(['de', 'el', 'la', 'en', 'un', 'una', 'los', 'las', 'por', 'con', 'para', 'del', 'que', 'se', 'su', 'al', 'y', 'o', 'a', 'to', 'of', 'in', 'and', 'for', 'the']);
-      
+
       const baseKeywords = normQuery.split(' ').filter(word => word.length >= 2 && !stopWords.has(word));
       const keywords = baseKeywords.flatMap(kw => ALIASES[kw] ? ALIASES[kw] : [kw]).map(normalizeText);
 
@@ -323,7 +324,7 @@ export async function GET(request: Request) {
         publishedAt: new Date().toISOString(),
         durationSeconds: 0,
       }));
-      
+
       searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
       console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
     }
@@ -333,7 +334,7 @@ export async function GET(request: Request) {
     if (durationFilter && durationFilter !== 'any') {
       allVideos = allVideos.filter(v => {
         if (!v.duration) return false;
-        
+
         const parts = v.duration.split(':').map(Number);
         let minutes = 0;
         if (parts.length === 3) {
@@ -363,7 +364,7 @@ export async function GET(request: Request) {
       hasMore,
       nextPageToken: hasMore ? (page + 1).toString() : null,
     });
-    
+
   } catch (error) {
     console.error('Error en el Motor Matrix:', error);
     return NextResponse.json({ error: 'Error al buscar videos.', media: [], hasMore: false, nextPageToken: null }, { status: 500 });
