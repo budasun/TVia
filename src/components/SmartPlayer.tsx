@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import YouTube from 'react-youtube';
-import { 
-  X, 
-  Send, 
-  MessageCircle, 
-  Sparkles, 
+import {
+  X,
+  Send,
+  MessageCircle,
+  Sparkles,
   Loader2,
   ChevronLeft,
   ChevronRight,
@@ -40,7 +40,7 @@ function getYouTubeId(url: string): string | null {
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
     /youtube\.com\/shorts\/([^&\n?#]+)/,
   ];
-  
+
   for (const pattern of patterns) {
     const match = url.match(pattern);
     if (match) return match[1];
@@ -63,8 +63,8 @@ function SuggestedVideoCard({ media, onClick }: { media: UnifiedMedia; onClick: 
     >
       <div className="flex gap-2 p-1.5">
         <div className="relative w-16 h-10 overflow-hidden shrink-0 border border-zinc-900">
-          <Image 
-            src={media.thumbnail} 
+          <Image
+            src={media.thumbnail}
             alt={media.title}
             fill
             sizes="64px"
@@ -90,10 +90,10 @@ function SuggestedVideoCard({ media, onClick }: { media: UnifiedMedia; onClick: 
   );
 }
 
-export default function SmartPlayer({ 
-  media, 
-  onClose, 
-  onNext, 
+export default function SmartPlayer({
+  media,
+  onClose,
+  onNext,
   onPrev,
   currentIndex,
   totalItems,
@@ -115,6 +115,7 @@ export default function SmartPlayer({
   const [isPaused, setIsPaused] = useState(false);
   const [youtubePlayer, setYoutubePlayer] = useState<{ playVideo: () => void; pauseVideo: () => void; setVolume: (v: number) => void; getVolume: () => number; mute: () => void; unMute: () => void; isMuted: () => boolean } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isMouseIdle, setIsMouseIdle] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -123,6 +124,28 @@ export default function SmartPlayer({
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    const handleMouseMove = () => {
+      setIsMouseIdle(false);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        setIsMouseIdle(true);
+      }, 3000);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    timeout = setTimeout(() => {
+      setIsMouseIdle(true);
+    }, 3000);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timeout);
+    };
   }, []);
 
   useEffect(() => {
@@ -153,7 +176,7 @@ export default function SmartPlayer({
     try {
       const savedVolume = localStorage.getItem('videoschool_volume');
       const savedMuted = localStorage.getItem('videoschool_muted');
-      
+
       if (savedVolume !== null) youtubePlayer.setVolume(parseInt(savedVolume, 10));
       if (savedMuted === 'true') youtubePlayer.mute();
       else if (savedMuted === 'false') youtubePlayer.unMute();
@@ -165,7 +188,7 @@ export default function SmartPlayer({
       if (savedFullscreen === 'true') {
         const playerContainer = document.querySelector('.smart-player-container');
         if (playerContainer && !document.fullscreenElement) {
-          playerContainer.requestFullscreen().catch(() => {});
+          playerContainer.requestFullscreen().catch(() => { });
         }
         localStorage.removeItem('videoschool_fullscreen');
       }
@@ -189,10 +212,10 @@ export default function SmartPlayer({
       fetch('/api/tagger', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          videoId: media.id, 
-          title: media.title, 
-          description: media.description 
+        body: JSON.stringify({
+          videoId: media.id,
+          title: media.title,
+          description: media.description
         })
       })
         .then(res => res.json())
@@ -213,9 +236,9 @@ export default function SmartPlayer({
           videoId: currentMedia.id,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.media && data.media.length > 0) {
         const filtered = data.media.filter((m: UnifiedMedia) => m.id !== currentMedia.id);
         setSuggestedVideos(filtered.slice(0, 4));
@@ -232,17 +255,17 @@ export default function SmartPlayer({
 
   const embedUrl = useMemo(() => {
     if (!media?.url) return null;
-    
+
     const youtubeId = getYouTubeId(media.url);
     if (youtubeId) {
       return `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
     }
-    
+
     const vimeoId = getVimeoId(media.url);
     if (vimeoId) {
       return `https://player.vimeo.com/video/${vimeoId}?autoplay=1`;
     }
-    
+
     return null;
   }, [media?.url]);
 
@@ -362,15 +385,15 @@ export default function SmartPlayer({
 
   const generatePDF = async () => {
     if (messages.length === 0 || isExporting) return;
-    
+
     setIsExporting(true);
 
     try {
       const html2pdf = (await import('html2pdf.js')).default;
-      
+
       const today = new Date();
       const dateStr = today.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      
+
       const headerHTML = `
         <div style="background: linear-gradient(135deg, #00CED1 0%, #00b3b3 100%); padding: 20px; margin-bottom: 20px; border-bottom: 3px solid #18181b;">
           <h1 style="font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; margin: 0; color: #18181b;">TutorVideoIA</h1>
@@ -378,7 +401,7 @@ export default function SmartPlayer({
           <p style="font-family: Arial, sans-serif; font-size: 11px; margin: 3px 0 0 0; color: #3f3f46;">Fecha: ${dateStr}</p>
         </div>
       `;
-      
+
       const videoTitle = media?.title || 'Video de YouTube';
       const videoInfoHTML = `
         <div style="padding: 15px; background: #f4f4f5; margin-bottom: 20px; border-left: 4px solid #00CED1;">
@@ -386,12 +409,12 @@ export default function SmartPlayer({
           <p style="font-family: Arial, sans-serif; font-size: 13px; margin: 5px 0 0 0; color: #52525b;">${videoTitle}</p>
         </div>
       `;
-      
+
       const messagesHTML = messages.map((msg) => {
         const role = msg.role === 'user' ? 'ESTUDIANTE' : 'TUTOR TutorVideoIA';
         const bgColor = msg.role === 'user' ? '#cffafe' : '#f4f4f5';
         const borderColor = msg.role === 'user' ? '#00CED1' : '#d4d4d8';
-        
+
         const contentFormatted = msg.content
           .replace(/^## (.+)$/gm, '<h2 style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #00CED1; margin: 15px 0 10px 0; padding-bottom: 5px; border-bottom: 1px solid #e4e4e7;">$1</h2>')
           .replace(/^### (.+)$/gm, '<h3 style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; color: #18181b; margin: 12px 0 8px 0;">$1</h3>')
@@ -400,7 +423,7 @@ export default function SmartPlayer({
           .replace(/^> (.+)$/gm, '<blockquote style="font-family: Arial, sans-serif; font-style: italic; font-size: 12px; color: #52525b; border-left: 3px solid #00CED1; padding-left: 10px; margin: 10px 0;">$1</blockquote>')
           .replace(/\n\n/g, '<br/><br/>')
           .replace(/\n/g, '<br/>');
-        
+
         return `
           <div style="margin-bottom: 15px; padding: 15px; background: ${bgColor}; border-left: 4px solid ${borderColor};">
             <p style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; margin: 0 0 8px 0; color: #71717a; text-transform: uppercase;">${role}</p>
@@ -408,13 +431,13 @@ export default function SmartPlayer({
           </div>
         `;
       }).join('');
-      
+
       const footerHTML = `
         <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e4e4e7; text-align: center;">
           <p style="font-family: Arial, sans-serif; font-size: 10px; color: #a1a1aa;">TutorVideoIA © 2026 - Plataforma Educativa Inteligente</p>
         </div>
       `;
-      
+
       const fullHTML = `
         <!DOCTYPE html>
         <html>
@@ -433,12 +456,12 @@ export default function SmartPlayer({
         </body>
         </html>
       `;
-      
+
       const element = document.createElement('div');
       element.innerHTML = fullHTML;
-      
+
       const safeTitle = (media?.title || 'Resumen_Video').split(/\s+/).slice(0, 3).join('_').replace(/[^a-zA-Z0-9_]/g, '');
-      
+
       const opt = {
         margin: 0,
         filename: `${safeTitle}.pdf`,
@@ -446,9 +469,9 @@ export default function SmartPlayer({
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
       };
-      
+
       await html2pdf().set(opt).from(element).save();
-      
+
     } catch (error) {
       console.error('Error generando PDF:', error);
     } finally {
@@ -492,15 +515,15 @@ export default function SmartPlayer({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-zinc-900 flex smart-player-container"
+      className={`fixed inset-0 z-50 bg-zinc-900 flex smart-player-container ${isMouseIdle ? 'cursor-none' : ''}`}
     >
       {/* CONTENEDOR PRINCIPAL - Desktop: flex-row, Mobile: flex-col */}
       <div className="flex flex-col lg:flex-row h-full w-full">
-        
+
         {/* SECCIÓN DEL VIDEO - Desktop: dinámico según chat, Mobile: full width */}
-        <motion.div 
+        <motion.div
           className="flex flex-col bg-zinc-900 transition-all duration-500"
-          style={{ 
+          style={{
             flex: videoFlexValue,
             minWidth: 0
           }}
@@ -517,7 +540,7 @@ export default function SmartPlayer({
               >
                 <X className="w-5 h-5" />
               </motion.button>
-              
+
               {totalItems > 1 && (
                 <div className="flex items-center gap-1 px-3 py-2 bg-white border-2 border-zinc-900">
                   <motion.button
@@ -544,7 +567,7 @@ export default function SmartPlayer({
                 </div>
               )}
             </div>
-            
+
             {/* Botón toggle chat - Solo visible en móvil */}
             {isMobile && (
               <motion.button
@@ -624,9 +647,9 @@ export default function SmartPlayer({
                   <div className="text-center p-8">
                     <p className="text-zinc-400 mb-4">No se puede reproducir este video</p>
                     {media?.url && (
-                      <a 
-                        href={media.url} 
-                        target="_blank" 
+                      <a
+                        href={media.url}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-cyan-400 hover:text-cyan-300 underline"
                       >
@@ -640,7 +663,7 @@ export default function SmartPlayer({
           </div>
 
           {/* Info del video y videos sugeridos - Solo visible en Desktop */}
-          <motion.div 
+          <motion.div
             className="hidden lg:block p-3 lg:p-4 bg-zinc-800 border-t-2 border-zinc-900"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -651,7 +674,7 @@ export default function SmartPlayer({
                 <h2 className="text-white font-bold text-sm lg:text-base truncate">{media.title}</h2>
                 <p className="text-zinc-400 text-xs mt-0.5 truncate">{media.description}</p>
               </div>
-              
+
               {totalItems > 1 && (
                 <div className="flex items-center gap-2">
                   <motion.button
@@ -677,7 +700,7 @@ export default function SmartPlayer({
                 </div>
               )}
             </div>
-            
+
             {suggestedVideos.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -704,20 +727,20 @@ export default function SmartPlayer({
         </motion.div>
 
         {/* SECCIÓN DEL CHAT - Solo se renderiza una versión según el dispositivo */}
-        
+
         {/* Chat Desktop - Barra lateral derecha - Solo cuando NO es móvil */}
         {!isMobile && (
           <>
             <motion.div
               initial={{ width: 400, opacity: 0, x: 50 }}
-              animate={{ 
-                width: chatOpen ? 400 : 0, 
+              animate={{
+                width: chatOpen ? 400 : 0,
                 opacity: chatOpen ? 1 : 0,
                 x: chatOpen ? 0 : 100
               }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="flex bg-white border-l-2 border-zinc-900 flex-col overflow-hidden"
-              style={{ 
+              style={{
                 flex: '1 1 0',
                 maxWidth: 400,
                 minWidth: 0,
@@ -877,7 +900,7 @@ function ChatPanel({
             >
               <MessageCircle className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
               <p className="text-zinc-500 text-sm">
-                ¡Hola! Soy tu tutor de TutorVideoIA. 
+                ¡Hola! Soy tu tutor de TutorVideoIA.
                 Hazme preguntas sobre el video o usa el botón &quot;Hacer Resumen&quot; para obtener un análisis completo.
               </p>
             </motion.div>
@@ -892,11 +915,10 @@ function ChatPanel({
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[85%] p-3 border-2 ${
-                  message.role === 'user'
+                className={`max-w-[85%] p-3 border-2 ${message.role === 'user'
                     ? 'bg-cyan-400 border-zinc-900 text-zinc-900'
                     : 'bg-zinc-100 border-zinc-300 text-zinc-800'
-                }`}
+                  }`}
               >
                 {message.role === 'user' ? (
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -904,17 +926,17 @@ function ChatPanel({
                   <div className="text-sm prose prose-sm max-w-none">
                     <ReactMarkdown
                       components={{
-                        h2: ({children}) => <h2 className="text-lg font-bold text-cyan-600 mt-6 mb-3 pb-1 border-b border-zinc-200">{children}</h2>,
-                        h3: ({children}) => <h3 className="text-base font-bold text-cyan-600 mt-3 mb-2">{children}</h3>,
-                        strong: ({children}) => <strong className="font-bold text-zinc-900">{children}</strong>,
-                        p: ({children}) => <p className="mb-4 leading-relaxed text-zinc-700">{children}</p>,
-                        ul: ({children}) => <ul className="list-disc pl-5 mb-4 space-y-2 text-zinc-700">{children}</ul>,
-                        li: ({children}) => <li className="text-zinc-700">{children}</li>,
-                        a: ({href, children}) => {
+                        h2: ({ children }) => <h2 className="text-lg font-bold text-cyan-600 mt-6 mb-3 pb-1 border-b border-zinc-200">{children}</h2>,
+                        h3: ({ children }) => <h3 className="text-base font-bold text-cyan-600 mt-3 mb-2">{children}</h3>,
+                        strong: ({ children }) => <strong className="font-bold text-zinc-900">{children}</strong>,
+                        p: ({ children }) => <p className="mb-4 leading-relaxed text-zinc-700">{children}</p>,
+                        ul: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-2 text-zinc-700">{children}</ul>,
+                        li: ({ children }) => <li className="text-zinc-700">{children}</li>,
+                        a: ({ href, children }) => {
                           const handleClick = (e: React.MouseEvent) => {
                             e.preventDefault();
                             if (!href) return;
-                            
+
                             if (href.includes('search_query=')) {
                               const url = new URL(href);
                               const query = url.searchParams.get('search_query') || '';
@@ -941,8 +963,8 @@ function ChatPanel({
                             }
                           };
                           return (
-                            <button 
-                              onClick={handleClick} 
+                            <button
+                              onClick={handleClick}
                               className="inline-flex items-center gap-1 mt-2 px-3 py-1.5 bg-cyan-100 border border-cyan-400 rounded text-cyan-700 hover:bg-cyan-200 transition-colors cursor-pointer text-xs font-medium"
                             >
                               <span>🔍</span>
@@ -986,7 +1008,7 @@ function ChatPanel({
             rows={2}
             className="w-full bg-transparent text-zinc-900 placeholder:text-zinc-400 px-2 py-2 resize-none focus:outline-none text-sm"
           />
-          
+
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <motion.button
@@ -1012,7 +1034,7 @@ function ChatPanel({
                 )}
               </motion.button>
             </div>
-            
+
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
