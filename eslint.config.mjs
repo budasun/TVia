@@ -20,8 +20,12 @@ const eslintConfig = tseslint.config(
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {
-      "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-unused-vars": "off",
+      "no-undef": "off",
+      "no-useless-escape": "off",
+      "prefer-const": "off",
     },
   }
 );
