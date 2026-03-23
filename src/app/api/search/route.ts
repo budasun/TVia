@@ -3,7 +3,14 @@ import type { UnifiedMedia, MediaCategory, CategoryFilter } from '@/types';
 import YouTube from 'youtube-sr';
 
 const searchCache = new Map<string, { timestamp: number; data: UnifiedMedia[] }>();
-const CACHE_DURATION = 1000 * 60 * 60 * 2;
+const CACHE_DURATION = 1000 * 60 * 60 * 12;
+
+const BREAKINGBAD_EPISODES: UnifiedMedia[] = [
+  { id: 'breakingbad-02x13', title: '02x13 - ABQ (Español Latino)', source: 'youtube', url: 'https://drive.google.com/file/d/13jKurcfHkYDT3QwsjQ_E3EcVuHamB9IB/view', thumbnail: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQiMDtj5tV5R7OegA1G-B3VGoGQ5TOlj_3M9r9kunoZcbEr40IEUzSljELnWAhJ6-0w-pPO0PJQVGu2fd2Zd2PJOFB-P8bEKhuJsNONR9VKDIbmFw06slzRzauRCBIO_7q5GS7OCQPt9M/s200/13-1.jpg', description: 'Breaking Bad Temporada 2 Capitulo 13 (Final)', category: 'entretenimiento', tags: [], author: 'AMC', duration: '47 min' },
+  { id: 'breakingbad-02x12', title: '02x12 - Fenix (Español Latino)', source: 'youtube', url: 'https://drive.google.com/file/d/1nsk0-H_iFeEORasuJ24M0IQfb5upkN9e/view', thumbnail: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi11W4QU28fMUVk3RdmlNW4SyjDSPtm7mO4RikPO0xkVdmLqiL7RStQKvJ0TEyhPxkDHzApVAITHOyMLekF_-PZfwK0JXkvUUie1kKF0kA0vaGMfCk4BqhxJYYKAY0BOCoDTkbBmBbtmys/s200/12-1.jpg', description: 'Breaking Bad Temporada 2 Capitulo 12', category: 'entretenimiento', tags: [], author: 'AMC', duration: '47 min' },
+  { id: 'breakingbad-02x11', title: '02x11 - Mandala (Español Latino)', source: 'youtube', url: 'https://drive.google.com/file/d/1WmQtm0TjJL2AZnGZWEDlu05uAB5YADIV/view', thumbnail: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiIcgjWgC1KjXapf-q_xAz1LHgzaEhElP-JdyQu75s_wZHwpOW4XxgoWMyY_5BMbA_ihhPBNGdBlBDXi4dZhJNHKs8t0aT68edYEo9s4o9cwJW8aKU8t9dtwgjFbPhOttPbsUWHE8oJDLo/s200/11-1.png', description: 'Breaking Bad Temporada 2 Capitulo 11', category: 'entretenimiento', tags: [], author: 'AMC', duration: '47 min' },
+  { id: 'breakingbad-02x10', title: '02x10 - Sobre (Español Latino)', source: 'youtube', url: 'https://drive.google.com/file/d/1_JyhtDFAB7RGvDtw6GJVcdyoTzfG9ulX/view', thumbnail: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1eg_YRSd1nsWDMg9u_DlEcm1YGUIyV2OBGsQBiqgAGHea8Palsj0-uF0azxm-H5RwfjUCQNW0oheTTE9UzM_GljWSvuytSwog7uqsm8mgh1WplFeaZgwF81nclEs_vMvsqvyOlUDoNIs/s200/10-1.png', description: 'Breaking Bad Temporada 2 Capitulo 10', category: 'entretenimiento', tags: [], author: 'AMC', duration: '47 min' },
+];
 
 const SIMPSONS_EPISODES: UnifiedMedia[] = [
   { id: 'simpsons-12x06', title: '12x06 - Amenaza Informática', source: 'youtube', url: 'https://mega.nz/embed/OMQjnYzS#QwVjbpktTtvsQA0dTBh0gQ-Ca5qsAtf6zky0jIaBSuw', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 12 Episode 6', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
@@ -60,6 +67,10 @@ const SIMPSONS_EPISODES: UnifiedMedia[] = [
   { id: 'simpsons-03x07', title: '03x07 - Especial de Noche de Brujas II', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxwjGD5ex87gIlMAQLoN6CjEQ7m-OQG-B7Bo-MasLzFhhagNCvlMCQXArX2vvjwptIiOgIguhpvZWHlMqLYVBuQJSU0dvGVQGhfhKVzLZmPiU4XObJjBknPQJEzDMkhFmj2lcwP', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 3 Episode 7', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-03x06', title: '03x06 - De tal padre, tal payaso', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxtCNgEH8PmhZansuJ8UTQ0OgUA_yX4YPE0oD1DGPqFoKLdPBuf7FAcN1zOMCFaR3etljl9TgbD3rL75dy3AFUfiZT2ouHlLFtVtizP2pUclxbWdDAoeFKKBzwtPbemP9uy', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 3 Episode 6', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-03x05', title: '03x05 - Homero en el diccionario', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dyGH-gMnCQPg-v5pQfQxuCv4zgd-V7aEfmlijXj3Xn2YVVXB7PSH6dawt14zE9EMY7tNSMzWqk6xWq26WVK49m-qdOD8thDCy_VgEs4kKR6D3aO5fSwVZAMhxRVG9Py21BI6IM', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 3 Episode 5', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'simpsons-03x04', title: '03x04 - El pequeño padrino', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dyT0YZ7f6-mDJAtyRVtd7RNJ0DIxmkfdnPufaIHEfJrCgjfLwQs34__zItLG7rAplWO2rxlaesjjYbZlpCIMEZtZjSdpJAcUNKo5OR6vp5mTHOzEkNa4cIJzrshrNch9c16yzw', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 3 Episode 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'simpsons-03x03', title: '03x03 - El día que cayó Flanders', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dzdC-L6wytr5vWtWJSQeqHJPmtvQrxLEfF-6BI0croLXdJ7RrdyjJkTiUgPDW_l7nMpKemrD8rFd984lxLvHxnjpQabDwiHmS_8w1-_FlC1KUZTsRyzSEkxc6XetwY_Y9mRylAq', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 3 Episode 3', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'simpsons-03x02', title: '03x02 - Lisa va a Washington', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dw_KxRQx0CsSRDzllG-nQ8VQJ1Yytl9dAXVVqVtUiUdVgt_6ve_ivsU8vO-a2g58dlZWBkL7okj-6LA7OWyiVUX3X3PYZOu99l1XkAR4UipkCdqIdobrAWKUeEqGdMaDrtohgk', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 3 Episode 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'simpsons-03x01', title: '03x01 - Papá está loco', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxfa7zRN_9rIXcE8O0E0UpcgirNikri3qRaZzKgJ2K6Zn-5ORMNu-caDLBpeMNm8mnmWEO4TmFaKPxFdAbpxE0d7wf-poySkZgNKDGt9uJMqwKZYaYfPuKR1oKveZH73sTNAEo_', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 3 Episode 1', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-04x22', title: '04x22 - El drama de Krusty', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dztAz3UwN9Vv45iEokNaHjtD6dzNsEdU5vN8TxZCFSNHMAHAbtHs5ymu7Q8QBCZeNK07lO8Gq5hAcRcs8vUibQsq_ZDZw7y1ymbLjH2X7m7FCs4P7E7hn2Er5jiujL7lBnpEg', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 4 Episode 22', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-04x21', title: '04x21 - Marge en cadenas', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dyvhy_PEDEFVvUR5j72aNl1W7aWsbtoJv7jF8ulDZoahgm5gUnm8NAV8qn7jCHA7OkV5n7weio7kdvwk50q1yW2-Yrix0Uytd15fHHq5CXeJjrRedoEhNgzHqZGV89aSgfHfYs', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 4 Episode 21', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'simpsons-04x20', title: '04x20 - El día del garrote', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dw2Hr1KkswAAbrBK6-JhskfmEcMsnEPve9zrcv4Lc_LBgRctbCkkguE35k_MxtM0hM0m6wdVVHqHaCd5CGddkXsNaCqPI00mRftOWrU_sctPEV18PeuyZMYCXeM2l6L8XZNbyoP', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Los Simpsons Temporada 4 Episode 20', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
@@ -170,6 +181,7 @@ const SIMPSONS_EPISODES: UnifiedMedia[] = [
   { id: 'futurama-02x12', title: '02x12 - Cómo Hermes recuperó su forma', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dwBjLAh9_bOmBqWrCyDPugN3vXP06CEh9-CMa1IdWGYxfkArPm6bO4b6lb6bnWgJuCts_dj2vsKnUW7GnVnILcz4osjFUV77NAKKCTN428m3DgZoEEme8t0Q6llHzX2hHCqWdrY', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-02x11', title: '02x11 - Mi propio clon', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dypuK-zdHWeOSzynZU1SoP_dBC_oe_J_V3P-A2GYGny69vQ09HR0TZ1ak2vgivlUnvuEP4j02IwwW1YqEzOqX5UgZc_NPaJuVAs1eIJEmHDDICIBjDYn9sUbrzWzF_QwugHs0R7', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-02x10', title: '02x10 - Un cíclope a la medida', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dztMAS3OYms4U5zqRj_addMBuP9CidGkLbcoYH-rgbmVzaAx8OFOFx9qGpur1682TUdjF_W5IlS6Qug3jA2EHD-5tKdtOUhn0Yonwdcv_mD_9CIMQASVOcM4MIG8DrgUH0Q1bI', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-02x09', title: '02x09 - El negocio del crimen', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxfa7zRN_9rIXcE8O0E0UpcgirNikri3qRaZzKgJ2K6Zn-5ORMNu-caDLBpeMNm8mnmWEO4TmFaKPxFdAbpxE0d7wf-poySkZgNKDGt9uJMqwKZYaYfPuKR1oKveZH73sTNAEo_', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-02x08', title: '02x08 - Bender el tremendo', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dwE3GX5Yuy8pIIWVkKUyAcSKNWiQ5noEYeq65YD0KleNLZdXMjga0zZfQqk9ZM22pkGCmuh952H-doDHnR7wVCwBqW2Ny0eH5lvRyAWTcG9dJPvANn6Eo3oMGxZz-nEme6V', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-02x07', title: '02x07 - menor de dos males', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dzQXhyxfPdR53XLlNYXrwT4SipmZeWbhR6F4ZkWoGQosiJQicgHJGuJK37L-ESCLjqkyS-uRv6SX1e5lxqcYwwpU-KHA03QLMJMx5x2E1Tn4NwS0XnZdzb1L7Yn1sf8-xX8BY-n', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-02x06', title: '02x06 - Pon tu cabeza sobre mi hombro', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dwzBGpzWTYDwEee4KQOqvsgD23x8nPzJx0Puy1owXWn4EQTo8TT0rJwtzSTF56f18pz31EhgU_BWfPBS6W8jnWJEXFkX_jsvoztJrzal5-L4ebWSq-HfMal4MVf6y8IuiCWNat_', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
@@ -178,6 +190,22 @@ const SIMPSONS_EPISODES: UnifiedMedia[] = [
   { id: 'futurama-02x03', title: '02x03 - A la cabeza de las elecciones', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxuA2VYBFPLi3IF3ECoMzttoej5GNk6eHm0c3-rfLJ69SiQyTw6V6Oz08TZENjtGehjOKxUuC1R8D6ABkzvDm3e0h6PwkForBzYRU0HIS2SgsEP7lspDNybIdPr_9fQuXLrBv8f', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-02x02', title: '02x02 - Brannigan comienza de nuevo', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxDxlGEDAnm0b2-Ji8YfSvFxMHk7i9xyr0DP_zhgzsLf4eUUzk2quNMCN5e99Z3ryhpAJU2jGJEwZN4Er955Z2D-AafGOjsjIE4ql2nuU1e-4fa19fa3u73RQHuqm1sEHuuwtU', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-02x01', title: '02x01 - Apoyo esa emoción', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxh1RWpe5fuvdtJ_EXaEV6oKm-6fDPCWnc8gvb-f3gR-ya5nRxTEe1x3XP-cVLaa6emDUMlQd4HnlTUA_NrjujSKaAHNbgaB5_hKC5MKI9JfoEBqlQ85ype3xLtFb8_zwKynSU', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x01', title: '04x01 - Las manos del diablo son juguetes ociosos', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dyT3pG1G2BSBPrlfzcHDV38HUevIMAz30hW6inmvW7fyQImeKoJnJKNVPeDgWcHwMyWoBsCvTqZYbNvMJ2tkzv2jxqLSamqyHuBW0iyXSTl2ThpAPXXyl9wgLsq0RHAVNvt_l9k', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x02', title: '04x02 - El codiciado Fry', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dyMGVHdjS2fPgp3T0MbLcph0sb-Z0aMckEQZKuLZ37HMj0aFNUEQf_uFLkltprFklLgl38GrHAoDe6dLIj3ylTqOv5KlPX0QYlWxvbtMFazZv25fvK_ocVpXtkGUn1q4V8eAuQ', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x03', title: '04x03 - Trescientos dolares', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dzbMxrIr3aHnpYFInYklHJdYxoM8auIfpFVaGOLD48hLnsYHo1POSCp78OpfZlr2dj7OBHGKJBFTk1jcv9nt5ZD_7CLljRXHh-DBxUJpOuouuG8tvbMnOXEbmFkZl-EGcrPfKCV', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x04', title: '04x04 - La caja paradojica de Farnsworth', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dzQxshZouderk2mTeX-6MKjCqtKe_A5B8fA-rBalulwqgW8OgCy9JMu68D9OJc18Vu2tYH0d4wtzfTX9TdbUmhKS26HOIZg6ScQuKt-kW5OtXIYGdO4TNOpy87VIrpQG7XwMPw', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x05', title: '04x05 - Obsoletamente fabuloso', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dyVVaJfOBDrmYOOzjJbBFG6PLOedZxPBX932lEhKXhGyFCZGgqX2SIuHKIWaWcT6BxLDCxSjppmH4GUI7ZtIWBKovztMhKQ4F8u7nrqrPFM-1UQKD-v11KWrsFI-Zaow4fADb3u', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x06', title: '04x06 - Bender es ella', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dzdmA1N9SMRnBFef_T3KS0OEIxwzzFnzcarUixY-TnMrGGMtNJGtBnXfbV4KPoDMpl_xmkUabPAyHVRNyOqNso3aVdUHvevBhHxel1tdzQaSlzDOFtguhV-ZeCoxE-3MeFrIqk', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x07', title: '04x07 - La Picadura', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxUtAqppBcDbFHZIcCsk1dArBaxokreZAknACkxYXX3-tvDkkpYVjNkdTtVNwChZO1qc_sU38AfXgIdBvdFrcTBXcLnuTaCff4fbZCIYSj3-F8klNmFEffJe0QKSfdh1Rgu7UXd', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x08', title: '04x08 - Donde ningun aficionado ha ido', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxJChXgWQFRzAdUnFx7rZ2oT8joHYUTI4BQrkL8iw7XsLo0rKtCIuaCrZLnr3ae_jDyVJ9r56sacAYGP3bbFMkGzTLOrhKuE0VZutw-YSdQgvNf_3ogQr0XXN2nUI37aBeYkHDF', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x09', title: '04x09 - El porque de Fry', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dwxYJUAdHkocJ2zqjcNk3_tIefUntp9EM_i8q0V36VODbSJ5sOQ1jD50TUOpRtfRKaqByhbqRa-0b16jTuqeqLsyGV31pHDZoVJU29fezrvU2SA_PWvFgmXpeeF6nxHAvrRcVU', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x10', title: '04x10 - Los obstaculos de Leela como mutante', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxRGkmhZBlqpeDF-p_OttNO7k0eDQ2SdXfcRU0KJYDjemrDisM63UGtemBJ3iwH2H0AV8JsE84ZPjM43ukba8KKn41j5VNeC671P2W4c0CtDseYeyaPeSPgi2Vlq_JshaeuFps', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x11', title: '04x11 - Crimenes de calor', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dx6qRhr3EyLtQYSbUAp6ZRo3WWm7rh0VWZV-6KcJtaNhgYh32nassQ73kJ8c2s_cccIVKV29ob44LKj8X3ZamcBuGrnx-Uptt4kQf1NIT_R_nPvL0CNlX-imk0E-8m4WA-PK9k', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x12', title: '04x12 - Ladrido jurasico', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dynUGxXGOxcwz4Ev-9hGcGWL6iiJRJyXRLTomqnxiysEyeyWMR3pKtGYHspBRPQOtv3WrzwIQZ5riowvIrw0hW-TUnhAenbS2hdohU7EgSclHJDTFNlklSElt0kjXU2lDCuMdM', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x13', title: '04x13 - Bender No Deberia Salir Por Television', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dzkJfG_ZFfipJsnyAgcu3nXtNDosZPx3L5wxLsJP8eT2wnvzdHJ-AVni0jA8YhOI1T5MzxlSs9WPUfXD1wrYLKDslgj2vN9lUu1rbLdZjhFuyOwBfnRWZclfjZO2Zf2mCQATQo', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x14', title: '04x14 - Una probadita de libertad', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dy5q2bNYkyD3k2R0M9Mf1jJcbJcHH7QMKYuVSVHspIApJ9RqtrpLKKpyEA_vH2K8gTeLEFysaUq0dbiCz6sjukfyZh9mAY5r3kLxFbLnl40FzoQT2-SudHbuOGbAI-3bPF19RI', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x15', title: '04x15 - Menos que heroe', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxi5YA82CQMv5jZUyVg7WSv2q1F9Ukii9vIrtTkPTaws5iUr0oXFfDDsMyecqK93WsrlLY4lm7XMMHHxaC73Zo8ECsKrGSGmFxuaVk_OH3gQOuA1lkA2e7vK6_2OVNry8-7mYpT', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
+  { id: 'futurama-04x16', title: '04x16 - Amor y cohete', source: 'youtube', url: 'https://www.blogger.com/video.g?token=AD6v5dxu1iEQMhk5E7SrfEqx-4WukKdWjh9WTmJkGJg0jv400dBn4wWM7jdNbi1iDMQUF5Krh_5NH5uGS4viMvQelomv3QyGM3zSbDCvr8JFOH0NLypARjbrcO-1xxz7pV_1EJQIEocR', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 4', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-09x01', title: '09x01 - Futurama', source: 'youtube', url: 'https://cine-seguro.xyz/stream/dhe94c23t.mp4', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 9 Episode 1', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-09x02', title: '09x02 - Futurama', source: 'youtube', url: 'https://cine-seguro.xyz/stream/17mt6dnvl.mp4', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 9 Episode 2', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
   { id: 'futurama-09x03', title: '09x03 - Futurama', source: 'youtube', url: 'https://cine-seguro.xyz/stream/ttnqrqlva.mp4', thumbnail: 'https://es.web.img3.acsta.net/pictures/19/08/12/10/01/2179246.jpg', description: 'Futurama Temporada 9 Episode 3', category: 'entretenimiento', tags: [], author: 'Fox', duration: '22 min' },
@@ -318,231 +346,155 @@ export async function GET(request: Request) {
     const query = searchParams.get('q')?.trim() || '';
     const category = (searchParams.get('category') as CategoryFilter) || 'all';
     const page = parseInt(searchParams.get('pageToken') || '0', 10);
+    const forceRefresh = searchParams.get('refresh') === 'true';
 
     const cacheKey = `${query}-${category}`.toLowerCase();
     let allVideos: UnifiedMedia[] = [];
 
-    if (searchCache.has(cacheKey) && (Date.now() - searchCache.get(cacheKey)!.timestamp < CACHE_DURATION)) {
+    if (!forceRefresh && searchCache.has(cacheKey) && (Date.now() - searchCache.get(cacheKey)!.timestamp < CACHE_DURATION)) {
       allVideos = searchCache.get(cacheKey)!.data;
-    } else if (category === 'entretenimiento') {
-      console.log('🕵️ Mezclando Blogger y YouTube Extendido para Entretenimiento...');
-
-      let youtubeVideos: any[] = [];
-
-      if (query === '') {
-        // Matriz de Búsqueda Masiva para Entretenimiento
-        const entertainmentQueries = [
-          'capítulos completos los simpsons latino',
-          'capítulos completos futurama latino',
-          'capítulos completos padre de familia latino',
-          'capítulos completos daria latino',
-          'capítulos completos south park latino',
-          'capítulos completos la casa de los dibujos latino',
-          'capítulos completos malcolm el de en medio latino',
-          'capítulos completos rick and morty latino'
-        ];
-
-        console.log(`🚀 Lanzando ${entertainmentQueries.length} hilos de búsqueda para Entretenimiento...`);
-        const searchPromises = entertainmentQueries.map(q =>
-          YouTube.search(q, { limit: 30, type: "video" }).catch(() => [])
-        );
-
-        const resultsMatrix = await Promise.all(searchPromises);
-        const rawResults = resultsMatrix.flat();
-
-        const uniqueMap = new Map();
-        rawResults.forEach((v: { id?: string }) => {
-          if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v);
-        });
-
-        youtubeVideos = Array.from(uniqueMap.values());
-
-        // Filtro Anti-Reacciones y Lista Negra de Canales
-        youtubeVideos = youtubeVideos.filter((v: any) => {
-          const channelName = (v.channel?.name || '').toLowerCase();
-          const title = (v.title || '').toLowerCase();
-
-          // Palabras bloqueadas en títulos o nombres de canal
-          const blockedKeywords = ['reaccion', 'reacción'];
-          // Lista negra de canales específicos (en minúsculas)
-          const blockedChannels = ['reichanneltvv', 'loren reacciona', 'luigi primetv', 'some lopez', 'kira', 'kiradad', 'maria perez'];
-
-          const hasBlockedKeyword = blockedKeywords.some(keyword =>
-            channelName.includes(keyword) || title.includes(keyword)
-          );
-
-          const isBlockedChannel = blockedChannels.some(channel =>
-            channelName.includes(channel)
-          );
-
-          return !hasBlockedKeyword && !isBlockedChannel;
-        });
-      } else {
-        // Búsqueda específica del usuario dentro de entretenimiento
-        const searchPromises = [
-          YouTube.search(query, { limit: 40, type: "video" }).catch(() => []),
-          YouTube.search(`${query} latino`, { limit: 40, type: "video" }).catch(() => []),
-        ];
-        const resultsMatrix = await Promise.all(searchPromises);
-        const rawResults = resultsMatrix.flat();
-
-        const uniqueMap = new Map();
-        rawResults.forEach((v: { id?: string }) => {
-          if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v);
-        });
-        youtubeVideos = Array.from(uniqueMap.values());
-
-        // Filtro Anti-Reacciones y Lista Negra de Canales
-        youtubeVideos = youtubeVideos.filter((v: any) => {
-          const channelName = (v.channel?.name || '').toLowerCase();
-          const title = (v.title || '').toLowerCase();
-
-          // Palabras bloqueadas en títulos o nombres de canal
-          const blockedKeywords = ['reaccion', 'reacción'];
-          // Lista negra de canales específicos (en minúsculas)
-          const blockedChannels = ['reichanneltvv', 'loren reacciona', 'luigi primetv', 'some lopez', 'kira', 'kiradad', 'maria perez'];
-
-          const hasBlockedKeyword = blockedKeywords.some(keyword =>
-            channelName.includes(keyword) || title.includes(keyword)
-          );
-
-          const isBlockedChannel = blockedChannels.some(channel =>
-            channelName.includes(channel)
-          );
-
-          return !hasBlockedKeyword && !isBlockedChannel;
-        });
-      }
-
-      // Mapear al formato unificado de VIDEOSCHOOL
-      youtubeVideos = youtubeVideos.map((v: any) => ({
-        id: v.id || '',
-        title: v.title || '',
-        source: 'youtube' as const,
-        url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
-        thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
-        description: v.description || `Video de ${v.channel?.name || 'YouTube'}`,
-        duration: v.durationFormatted || '',
-        author: v.channel?.name || 'Desconocido',
-        category: 'entretenimiento',
-        tags: [],
-        createdAt: new Date(),
-        publishedAt: new Date().toISOString(),
-        durationSeconds: 0,
-      }));
-
-      allVideos = query === '' ? [...SIMPSONS_EPISODES, ...youtubeVideos] : youtubeVideos;
-
-      searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
-      console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
+      console.log(`📦 Cache hit para "${cacheKey}" - ${allVideos.length} videos`);
     } else {
-      console.log('🕵️ Iniciando Deep Matrix Scraping para:', cacheKey);
-
-      // 2. TRADUCCIÓN DE ACRÓNIMOS PARA YOUTUBE
-      const normQuery = query.toLowerCase();
-      const queryForYoutube = ALIASES[normQuery] ? ALIASES[normQuery][0] : query;
-
-      let baseStrings: string[] = [];
-      if (query === '') {
-        baseStrings = category === 'all' ? ['documentales educativos', 'ciencia explicada', 'cursos gratis'] : CATEGORY_QUERIES[category];
-      } else {
-        if (category === 'all') {
-          baseStrings = [queryForYoutube, `${queryForYoutube} documental`, `${queryForYoutube} explicado`];
-        } else {
-          baseStrings = CATEGORY_QUERIES[category].map(catKw => `${queryForYoutube} ${catKw}`);
-        }
+      if (forceRefresh) {
+        searchCache.delete(cacheKey);
+        console.log(`🔄 Force refresh para "${cacheKey}"`);
       }
 
-      // 3. MATRIZ DE VIAJE EN EL TIEMPO (El multiplicador masivo)
-      // Añadimos sufijos para romper la "Burbuja del Top 20" de YouTube
-      const modifiers = ['', '2026', '2025', 'nuevo'];
+      if (category === 'entretenimiento') {
+        console.log('🕵️ Mezclando Blogger y YouTube Extendido para Entretenimiento...');
+        let youtubeVideos: any[] = [];
 
-      // Multiplicamos las 3 búsquedas base por los 4 modificadores = 12 Hilos de búsqueda
-      const searchStrings = baseStrings.flatMap(base =>
-        modifiers.map(mod => mod ? `${base} ${mod}` : base)
-      );
+        if (query === '') {
+          const entertainmentQueries = [
+            'capítulos completos los simpsons latino',
+            'capítulos completos futurama latino',
+            'capítulos completos padre de familia latino',
+            'capítulos completos daria latino',
+            'capítulos completos south park latino',
+            'capítulos completos la casa de los dibujos latino',
+            'capítulos completos malcolm el de en medio latino',
+            'capítulos completos rick and morty latino'
+          ];
+          console.log(`🚀 Lanzando ${entertainmentQueries.length} hilos de búsqueda para Entretenimiento...`);
+          const searchPromises = entertainmentQueries.map(q => YouTube.search(q, { limit: 30, type: "video" }).catch(() => []));
+          const resultsMatrix = await Promise.all(searchPromises);
+          const rawResults = resultsMatrix.flat();
+          const uniqueMap = new Map();
+          rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
+          youtubeVideos = Array.from(uniqueMap.values());
+        } else {
+          const searchPromises = [
+            YouTube.search(query, { limit: 40, type: "video" }).catch(() => []),
+            YouTube.search(`${query} latino`, { limit: 40, type: "video" }).catch(() => [])
+          ];
+          const resultsMatrix = await Promise.all(searchPromises);
+          const rawResults = resultsMatrix.flat();
+          const uniqueMap = new Map();
+          rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
+          youtubeVideos = Array.from(uniqueMap.values());
+        }
 
-      console.log(`🚀 Lanzando ${searchStrings.length} hilos de búsqueda para máxima cobertura...`);
-
-      // 3.5 EXTRACCIÓN MASIVA 
-      // Usamos limit: 30 por hilo. 12 hilos * 30 = 360 videos crudos solicitados.
-      const searchPromises = searchStrings.map(searchStr =>
-        YouTube.search(searchStr, { limit: 30, type: "video" }).catch(() => [])
-      );
-
-      const resultsMatrix = await Promise.all(searchPromises);
-      const rawResults = resultsMatrix.flat();
-
-      const uniqueMap = new Map();
-      const stopWords = new Set(['de', 'el', 'la', 'en', 'un', 'una', 'los', 'las', 'por', 'con', 'para', 'del', 'que', 'se', 'su', 'al', 'y', 'o', 'a', 'to', 'of', 'in', 'and', 'for', 'the']);
-
-      const baseKeywords = normQuery.split(' ').filter(word => word.length >= 2 && !stopWords.has(word));
-      const keywords = baseKeywords.flatMap(kw => ALIASES[kw] ? ALIASES[kw] : [kw]).map(normalizeText);
-
-      rawResults.forEach((v: { id?: string }) => {
-        if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v);
-      });
-
-      let filteredRaw = Array.from(uniqueMap.values());
-
-      if (keywords.length > 0 && query !== 'documentales' && query !== '') {
-        const strictFiltered = filteredRaw.filter((v: { title?: string; description?: string; channel?: { name?: string } }) => {
-          const textToSearch = normalizeText(`${v.title} ${v.description || ''} ${v.channel?.name || ''}`);
-          return keywords.some(kw => {
-            if (kw.includes(' ')) return textToSearch.includes(kw);
-            const safeKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp(`\\b${safeKw}\\b`, 'i');
-            return regex.test(textToSearch);
-          });
+        youtubeVideos = youtubeVideos.filter((v: any) => {
+          const channelName = (v.channel?.name || '').toLowerCase();
+          const title = (v.title || '').toLowerCase();
+          const blockedKeywords = ['reaccion', 'reacción'];
+          const blockedChannels = ['reichanneltvv', 'loren reacciona', 'luigi primetv', 'some lopez', 'kira', 'kiradad', 'maria perez'];
+          const hasBlockedKeyword = blockedKeywords.some(kw => channelName.includes(kw) || title.includes(kw));
+          const isBlockedChannel = blockedChannels.some(ch => channelName.includes(ch));
+          return !hasBlockedKeyword && !isBlockedChannel;
         });
 
-        if (strictFiltered.length >= 40) {
-          filteredRaw = strictFiltered;
+        youtubeVideos = youtubeVideos.map((v: any) => ({
+          id: v.id || '',
+          title: v.title || '',
+          source: 'youtube' as const,
+          url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
+          thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
+          description: v.description || `Video de ${v.channel?.name || 'YouTube'}`,
+          duration: v.durationFormatted || '',
+          author: v.channel?.name || 'Desconocido',
+          category: 'entretenimiento',
+          tags: [],
+          createdAt: new Date(),
+          publishedAt: new Date().toISOString(),
+          durationSeconds: 0,
+        }));
+
+        allVideos = query === '' ? [...BREAKINGBAD_EPISODES, ...SIMPSONS_EPISODES, ...youtubeVideos] : youtubeVideos;
+        searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+        console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
+      } else {
+        console.log('🕵️ Iniciando Deep Matrix Scraping para:', cacheKey);
+        const normQuery = query.toLowerCase();
+        const queryForYoutube = ALIASES[normQuery] ? ALIASES[normQuery][0] : query;
+
+        let baseStrings: string[] = [];
+        if (query === '') {
+          baseStrings = category === 'all' ? ['documentales educativos', 'ciencia explicada', 'cursos gratis'] : CATEGORY_QUERIES[category];
         } else {
-          console.log(`⚠️ Filtro muy estricto (${strictFiltered.length} res). Activando Safe Fallback.`);
+          if (category === 'all') {
+            baseStrings = [queryForYoutube, `${queryForYoutube} documental`, `${queryForYoutube} explicado`];
+          } else {
+            baseStrings = CATEGORY_QUERIES[category].map(catKw => `${queryForYoutube} ${catKw}`);
+          }
         }
+
+        const modifiers = ['', '2026', '2025', 'nuevo'];
+        const searchStrings = baseStrings.flatMap(base => modifiers.map(mod => mod ? `${base} ${mod}` : base));
+        console.log(`🚀 Lanzando ${searchStrings.length} hilos de búsqueda para máxima cobertura...`);
+
+        const searchPromises = searchStrings.map(searchStr => YouTube.search(searchStr, { limit: 30, type: "video" }).catch(() => []));
+        const resultsMatrix = await Promise.all(searchPromises);
+        const rawResults = resultsMatrix.flat();
+        const uniqueMap = new Map();
+        const stopWords = new Set(['de', 'el', 'la', 'en', 'un', 'una', 'los', 'las', 'por', 'con', 'para', 'del', 'que', 'se', 'su', 'al', 'y', 'o', 'a', 'to', 'of', 'in', 'and', 'for', 'the']);
+        const baseKeywords = normQuery.split(' ').filter(word => word.length >= 2 && !stopWords.has(word));
+        const keywords = baseKeywords.flatMap(kw => ALIASES[kw] ? ALIASES[kw] : [kw]).map(normalizeText);
+        rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
+
+        let filteredRaw = Array.from(uniqueMap.values());
+        if (keywords.length > 0 && query !== 'documentales' && query !== '') {
+          const strictFiltered = filteredRaw.filter((v: { title?: string; description?: string; channel?: { name?: string } }) => {
+            const textToSearch = normalizeText(`${v.title} ${v.description || ''} ${v.channel?.name || ''}`);
+            return keywords.some(kw => {
+              if (kw.includes(' ')) return textToSearch.includes(kw);
+              const safeKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              const regex = new RegExp(`\\b${safeKw}\\b`, 'i');
+              return regex.test(textToSearch);
+            });
+          });
+          if (strictFiltered.length >= 40) filteredRaw = strictFiltered;
+          else console.log(`⚠️ Filtro muy estricto (${strictFiltered.length} res). Activando Safe Fallback.`);
+        }
+
+        allVideos = filteredRaw.map((v: { id?: string; title?: string; description?: string; thumbnail?: { url?: string }; channel?: { name?: string }; durationFormatted?: string }) => ({
+          id: v.id || '',
+          title: v.title || '',
+          source: 'youtube' as const,
+          url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
+          thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
+          description: v.description || `Video de ${v.channel?.name || 'YouTube'}`,
+          duration: v.durationFormatted || '',
+          author: v.channel?.name || 'Desconocido',
+          category: category !== 'all' ? category : detectCategory(v.title || '', v.description || ''),
+          tags: [],
+          createdAt: new Date(),
+          publishedAt: new Date().toISOString(),
+          durationSeconds: 0,
+        }));
+
+        if (category === 'pelicula' && query === '') allVideos = [...PELICULAS, ...allVideos];
+        searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+        console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
       }
-
-      allVideos = filteredRaw.map((v: { id?: string; title?: string; description?: string; thumbnail?: { url?: string }; channel?: { name?: string }; durationFormatted?: string }) => ({
-        id: v.id || '',
-        title: v.title || '',
-        source: 'youtube' as const,
-        url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
-        thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
-        description: v.description || `Video de ${v.channel?.name || 'YouTube'}`,
-        duration: v.durationFormatted || '',
-        author: v.channel?.name || 'Desconocido',
-        category: category !== 'all' ? category : detectCategory(v.title || '', v.description || ''),
-        tags: [],
-        createdAt: new Date(),
-        publishedAt: new Date().toISOString(),
-        durationSeconds: 0,
-      }));
-
-      if (category === 'pelicula' && query === '') {
-        allVideos = [...PELICULAS, ...allVideos];
-      }
-
-      searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
-      console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
     }
 
-    // Filtrado por duración
     const durationFilter = searchParams.get('duration');
     if (durationFilter && durationFilter !== 'any') {
       allVideos = allVideos.filter(v => {
         if (!v.duration) return false;
-
         const parts = v.duration.split(':').map(Number);
-        let minutes = 0;
-        if (parts.length === 3) {
-          minutes = (parts[0] * 60) + parts[1];
-        } else if (parts.length === 2) {
-          minutes = parts[0];
-        } else {
-          minutes = 0;
-        }
-
+        let minutes = parts.length === 3 ? (parts[0] * 60) + parts[1] : parts.length === 2 ? parts[0] : 0;
         if (durationFilter === '20-35') return minutes >= 20 && minutes <= 35;
         if (durationFilter === '36-60') return minutes >= 36 && minutes <= 60;
         if (durationFilter === '>60') return minutes > 60;
@@ -555,14 +507,20 @@ export async function GET(request: Request) {
     const endIndex = startIndex + PAGE_SIZE;
     const paginatedVideos = allVideos.slice(startIndex, endIndex);
     const hasMore = endIndex < allVideos.length;
+    const fromCache = !forceRefresh && searchCache.has(cacheKey);
 
     return NextResponse.json({
       media: paginatedVideos,
       total: allVideos.length,
       hasMore,
       nextPageToken: hasMore ? (page + 1).toString() : null,
+      fromCache,
+      cachedAt: fromCache ? new Date(searchCache.get(cacheKey)!.timestamp).toISOString() : null,
+    }, {
+      headers: {
+        'Cache-Control': forceRefresh ? 'no-store, must-revalidate' : `public, max-age=${CACHE_DURATION / 1000}`,
+      }
     });
-
   } catch (error) {
     console.error('Error en el Motor Matrix:', error);
     return NextResponse.json({ error: 'Error al buscar videos.', media: [], hasMore: false, nextPageToken: null }, { status: 500 });
