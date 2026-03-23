@@ -210,19 +210,17 @@ export default function Home() {
     <div className="min-h-screen bg-white text-zinc-900 font-sans">
       <header className="pt-20 pb-12 px-6 bg-white border-b-2 border-zinc-900 flex flex-col items-center">
         <div className="w-full max-w-7xl mx-auto flex flex-col items-center text-center">
-          <motion.h1 
-            className="font-black uppercase tracking-tighter leading-none mb-6 flex items-baseline justify-center"
+            <motion.h1 
+            className="font-black uppercase tracking-tight leading-none mb-6 flex items-baseline justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <span className="text-[#D946EF] text-5xl md:text-7xl drop-shadow-[0_5px_15px_rgba(34,211,238,0.6)]">T</span>
-            <span className="text-[#22D3EE] text-2xl md:text-4xl drop-shadow-[0_5px_15px_rgba(217,70,239,0.5)]">utor</span>
-            <span className="text-[#D946EF] text-5xl md:text-7xl ml-1 drop-shadow-[0_5px_15px_rgba(34,211,238,0.6)]">V</span>
-            <span className="text-[#22D3EE] text-2xl md:text-4xl drop-shadow-[0_5px_15px_rgba(217,70,239,0.5)]">ideo</span>
-            <span className="text-[#D946EF] text-5xl md:text-7xl ml-1 drop-shadow-[0_5px_15px_rgba(34,211,238,0.6)]">IA</span>
+            <span className="text-white drop-shadow-[0_0_2px_rgba(0,0,0,0.8)] text-5xl md:text-7xl" style={{ WebkitTextStroke: '1.5px black' }}>Tutor </span>
+            <span className="text-[#22D3EE] text-5xl md:text-7xl drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]" style={{ WebkitTextStroke: '1px black' }}>Video </span>
+            <span className="text-[#D946EF] text-4xl md:text-6xl drop-shadow-[0_0_25px_rgba(217,70,239,0.7)]" style={{ WebkitTextStroke: '1px black' }}>IA</span>
           </motion.h1>
-          <p className="text-zinc-600 text-xl md:text-2xl font-medium max-w-2xl">
-            Tu plataforma educativa inteligente. Explora documentales, ciencia, opera y mas.
+          <p className="text-zinc-900 text-xl md:text-2xl font-medium max-w-2xl text-center">
+            Tu plataforma de streaming educativo. Videos de calidad para aprender y disfrutar.
           </p>
           <div className="w-full">
             <OmniSearch

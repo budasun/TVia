@@ -1,7 +1,5 @@
 'use client';
 
-import { memo } from 'react';
-import Image from 'next/image';
 import { Play, Clock, Calendar } from 'lucide-react';
 import type { UnifiedMedia } from '@/types';
 
@@ -56,20 +54,21 @@ function formatDate(dateString: string | Date | undefined): string {
   return `Hace ${Math.floor(diffDays / 365)} años`;
 }
 
-const MediaCard = memo(function MediaCard({ item, onSelectMedia }: { item: UnifiedMedia; onSelectMedia: (media: UnifiedMedia) => void }) {
+function MediaCard({ item, onSelectMedia }: { item: UnifiedMedia; onSelectMedia: (media: UnifiedMedia) => void }) {
+  const thumbnailSrc = item.thumbnail || BRAND_PLACEHOLDER;
   return (
     <div
       onClick={() => onSelectMedia(item)}
       className="block bg-white border-2 border-zinc-900 cursor-pointer hover:shadow-[6px_6px-0px_#00ffff] hover:-translate-y-1 transition-all duration-200 overflow-hidden"
     >
       <div className="relative aspect-video overflow-hidden bg-zinc-200">
-        <Image
-          src={item.thumbnail || BRAND_PLACEHOLDER}
+        <img
+          src={thumbnailSrc}
           alt={item.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover transition-transform duration-300 hover:scale-105"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          className="transition-transform duration-300 hover:scale-105"
           loading="lazy"
+          referrerPolicy="no-referrer"
           onError={(e) => { 
             (e.target as HTMLImageElement).src = BRAND_PLACEHOLDER;
           }}
@@ -115,7 +114,7 @@ const MediaCard = memo(function MediaCard({ item, onSelectMedia }: { item: Unifi
       </div>
     </div>
   );
-});
+}
 
 export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
   return (
