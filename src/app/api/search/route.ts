@@ -531,8 +531,21 @@ export async function GET(request: Request) {
     const hasMore = endIndex < allVideos.length;
     const fromCache = !forceRefresh && searchCache.has(cacheKey);
 
+    const minimalVideos = paginatedVideos.map(v => ({
+      id: v.id,
+      title: v.title,
+      thumbnail: v.thumbnail,
+      description: v.description,
+      url: v.url,
+      source: v.source,
+      category: v.category,
+      author: v.author,
+      duration: v.duration,
+      publishedAt: v.publishedAt,
+    }));
+
     return NextResponse.json({
-      media: paginatedVideos,
+      media: minimalVideos,
       total: allVideos.length,
       hasMore,
       nextPageToken: hasMore ? (page + 1).toString() : null,
