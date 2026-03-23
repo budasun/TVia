@@ -4,6 +4,11 @@ import YouTube from 'youtube-sr';
 
 const searchCache = new Map<string, { timestamp: number; data: UnifiedMedia[] }>();
 const CACHE_DURATION = 1000 * 60 * 60 * 12;
+const TV_CACHE_DURATION = 1000 * 60 * 60 * 24 * 365;
+
+function getCacheDuration(category: string): number {
+  return category === 'entretenimiento' ? TV_CACHE_DURATION : CACHE_DURATION;
+}
 
 const BREAKINGBAD_EPISODES: UnifiedMedia[] = [
   { id: 'breakingbad-03x01', title: '03x01 - No Más (Español Latino)', source: 'youtube', url: 'https://drive.google.com/file/d/1o4aCtI0T8QPbCC0V5T4NeH90jAq234Ea/view', thumbnail: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5GQeSrcb2nFur-7Lf8KXe43N80uX15A08V2Q3TZoV8i69thO8Rvx84_9xeMeiK-zgvm7IjGgfFHsjvQXSF7_SDX8_U7HYx6QObH1Mn__nBfTp9qpfinxBXYCZ1hH9WTXPiAB-rEAYIoA/s200/1-1.png', description: 'Breaking Bad Temporada 3 Capitulo 1 - No Más. Walt se enfrenta a una nueva amenaza y tiene que tratar con una Skyler cada vez más indignada.', category: 'entretenimiento', tags: [], author: 'AMC', duration: '47 min' },
@@ -366,7 +371,9 @@ export async function GET(request: Request) {
     const cacheKey = `${query}-${category}`.toLowerCase();
     let allVideos: UnifiedMedia[] = [];
 
-    if (!forceRefresh && searchCache.has(cacheKey) && (Date.now() - searchCache.get(cacheKey)!.timestamp < CACHE_DURATION)) {
+    const cacheDuration = getCacheDuration(category);
+
+    if (!forceRefresh && searchCache.has(cacheKey) && (Date.now() - searchCache.get(cacheKey)!.timestamp < cacheDuration)) {
       allVideos = searchCache.get(cacheKey)!.data;
       console.log(`📦 Cache hit para "${cacheKey}" - ${allVideos.length} videos`);
     } else {
@@ -533,7 +540,7 @@ export async function GET(request: Request) {
       cachedAt: fromCache ? new Date(searchCache.get(cacheKey)!.timestamp).toISOString() : null,
     }, {
       headers: {
-        'Cache-Control': forceRefresh ? 'no-store, must-revalidate' : `public, max-age=${CACHE_DURATION / 1000}`,
+        'Cache-Control': forceRefresh ? 'no-store, must-revalidate' : `public, max-age=${cacheDuration / 1000}`,
       }
     });
   } catch (error) {
