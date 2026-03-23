@@ -44,7 +44,7 @@ const CATEGORY_TITLES: Record<CategoryFilter, string> = {
   opera: 'Ópera',
   podcast: 'Podcasts',
   tutorial: 'Tutoriales',
-  concerto: 'Conciertos',
+  concierto: 'Conciertos',
   arte: 'Arte',
   cortometraje: 'Cortogramas',
   entretenimiento: 'TV',
