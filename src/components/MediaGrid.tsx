@@ -1,7 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
-import Image from 'next/image';
+import { memo } from 'react';
 import { Play, Clock, Calendar } from 'lucide-react';
 import type { UnifiedMedia } from '@/types';
 
@@ -55,24 +54,20 @@ function formatDate(dateString: string | Date | undefined): string {
 }
 
 const MediaCard = memo(function MediaCard({ item, onSelectMedia }: { item: UnifiedMedia; onSelectMedia: (media: UnifiedMedia) => void }) {
-  const [imgSrc, setImgSrc] = useState(item.thumbnail || BRAND_PLACEHOLDER);
-
   return (
     <div
       onClick={() => onSelectMedia(item)}
-      className="block bg-white border-2 border-zinc-900 cursor-pointer hover:shadow-[6px_6px_0px_#00ffff] hover:-translate-y-1 transition-all duration-200 overflow-hidden"
+      className="block bg-white border-2 border-zinc-900 cursor-pointer hover:shadow-[6px_6px-0px_#00ffff] hover:-translate-y-1 transition-all duration-200 overflow-hidden"
     >
       <div className="relative aspect-video overflow-hidden bg-zinc-200">
-        <Image
-          src={imgSrc}
+        <img
+          src={item.thumbnail || BRAND_PLACEHOLDER}
           alt={item.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-          className="object-cover transition-transform duration-300 hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           loading="lazy"
-          placeholder="empty"
-          onError={() => { 
-            setImgSrc(BRAND_PLACEHOLDER); 
+          referrerPolicy="no-referrer"
+          onError={(e) => { 
+            (e.target as HTMLImageElement).src = BRAND_PLACEHOLDER;
           }}
         />
         <div className="absolute inset-0 bg-zinc-900/0 hover:bg-zinc-900/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-all group">

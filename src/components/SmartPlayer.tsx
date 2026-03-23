@@ -78,6 +78,8 @@ function SuggestedVideoCard({ media, onClick }: { media: UnifiedMedia; onClick: 
             sizes="64px"
             className="object-cover"
             loading="lazy"
+            unoptimized
+            referrerPolicy="no-referrer"
             placeholder="empty"
             onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&q=80'; }}
           />
