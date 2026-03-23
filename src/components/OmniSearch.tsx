@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Sparkles, Film, Microscope, Music, Podcast, Clock, Calendar, ChevronDown, Drama, Clapperboard, Palette, GraduationCap, Tv } from 'lucide-react';
+import { Search, Sparkles, Film, Microscope, Music, Podcast, Clock, Calendar, ChevronDown, Drama, Clapperboard, Palette, GraduationCap, Tv, UtensilsCrossed } from 'lucide-react';
 import type { CategoryFilter, DurationFilter, UploadDateFilter, SearchFilters } from '@/types';
 
 interface OmniSearchProps {
@@ -14,10 +14,11 @@ interface OmniSearchProps {
 
 const categories = [
   { id: 'all' as CategoryFilter, label: 'Todo', icon: Sparkles },
+  { id: 'recetas' as CategoryFilter, label: 'Recetas', icon: UtensilsCrossed },
   { id: 'documental' as CategoryFilter, label: 'Documentales', icon: Film },
   { id: 'ciencia' as CategoryFilter, label: 'Ciencia', icon: Microscope },
   { id: 'pelicula' as CategoryFilter, label: 'Películas', icon: Drama },
-  { id: 'cortometraje' as CategoryFilter, label: 'Cortometrajes', icon: Clapperboard },
+  { id: 'cortometraje' as CategoryFilter, label: 'Cortogramas', icon: Clapperboard },
   { id: 'opera' as CategoryFilter, label: 'Ópera', icon: Music },
   { id: 'podcast' as CategoryFilter, label: 'Podcast', icon: Podcast },
   { id: 'tutorial' as CategoryFilter, label: 'Tutoriales', icon: GraduationCap },

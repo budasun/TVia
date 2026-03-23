@@ -337,7 +337,56 @@ export default function SmartPlayer({
 
     const youtubeId = getYouTubeId(media?.url || '');
 
-    const summaryPromptContent = 'Genera un resumen completo y estructurado del contenido del video. Incluye: tema central, cronología del argumento, conceptos clave, temas secundarios, evidencia y datos, citas textuales destacadas, conclusiones, preguntas para análisis y recomendaciones para profundizar.';
+    let summaryPromptContent: string;
+    
+    if (category === 'recetas') {
+      const canal = media?.author || 'Chef desconocido';
+      summaryPromptContent = `Eres un chef experto y crítico culinario. Analiza este video de receta y genera un reporte completo para PDF con formato profesional.
+
+**CANAL:** ${canal}
+
+**🍽️ RECETA COMPLETA**
+- Nombre del plato
+- País/Región de origen  
+- Porciones que rinde
+- Tiempo de preparación
+- Tiempo de cocción
+
+**📝 INGREDIENTES**
+Lista TODOS los ingredientes mencionados con cantidades exactas cuando estén disponibles:
+1. Ingrediente 1 - cantidad
+2. Ingrediente 2 - cantidad
+[Continuar con todos los ingredientes...]
+
+**👨‍🍳 PREPARACIÓN PASO A PASO**
+Describe cada paso de la preparación de manera clara y secuencial:
+Paso 1: [Descripción]
+Paso 2: [Descripción]
+[Continuar con todos los pasos...]
+
+**💡 TIPS Y CONSEJOS DEL CHEF**
+- [Tip 1]
+- [Tip 2]
+- [Tip 3...]
+[Todos los tips mencionados en el video]
+
+**📋 CITAS TEXTUALES RELEVANTES**
+Incluye frases literales del presentador/chef sobre:
+- Técnicas de cocina mencionadas
+- Secretos del chef
+- Recomendaciones de sabor
+- Errores comunes a evitar
+
+**⭐ VALORACIÓN NUTRICIONAL**
+- Nivel de dificultad: [Fácil/Medio/Difícil]
+- Costo aproximado: [Bajo/Medio/Alto]
+- Valor calórico aproximado
+- Sugerencias de variación
+
+Formato: Usa markdown para estructura. Sé detallado y preciso.`;
+    } else {
+      summaryPromptContent = `Genera un resumen completo y estructurado del contenido del video. Incluye: tema central, cronología del argumento, conceptos clave, temas secundarios, evidencia y datos, citas textuales destacadas, conclusiones, preguntas para análisis y recomendaciones para profundizar.`;
+    }
 
     const summaryPrompt: ChatMessage = {
       id: `user-summary-${Date.now()}`,
@@ -404,7 +453,16 @@ export default function SmartPlayer({
       const today = new Date();
       const dateStr = today.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-      const headerHTML = `
+      const isRecetas = category === 'recetas';
+      const canal = media?.author || 'Chef desconocido';
+      const isRecetaStyle = isRecetas;
+
+      const headerHTML = isRecetaStyle ? `
+        <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); padding: 25px 20px; margin-bottom: 20px; border-bottom: 4px solid #15803d;">
+          <h1 style="font-family: Arial, sans-serif; font-size: 32px; font-weight: bold; margin: 0 0 5px 0; color: white;">🍳 Receta Detallada</h1>
+          <p style="font-family: Arial, sans-serif; font-size: 14px; margin: 0; color: #dcfce7;">Generado por TutorVideoIA - ${dateStr}</p>
+        </div>
+      ` : `
         <div style="background: linear-gradient(135deg, #00CED1 0%, #00b3b3 100%); padding: 20px; margin-bottom: 20px; border-bottom: 3px solid #18181b;">
           <h1 style="font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; margin: 0; color: #18181b;">TutorVideoIA</h1>
           <p style="font-family: Arial, sans-serif; font-size: 12px; margin: 5px 0 0 0; color: #18181b;">Generado por Tutor IA</p>
@@ -413,38 +471,50 @@ export default function SmartPlayer({
       `;
 
       const videoTitle = media?.title || 'Video de YouTube';
-      const videoInfoHTML = `
+      const videoInfoHTML = isRecetaStyle ? `
+        <div style="padding: 20px; background: #f0fdf4; margin-bottom: 20px; border-left: 5px solid #22c55e; border-radius: 0 8px 8px 0;">
+          <p style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; margin: 0 0 5px 0; color: #166534;">📺 CANAL</p>
+          <p style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; margin: 0 0 10px 0; color: #18181b;">${canal}</p>
+          <p style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; margin: 0 0 3px 0; color: #166534;">📹 RECETA</p>
+          <p style="font-family: Arial, sans-serif; font-size: 15px; margin: 0; color: #52525b;">${videoTitle}</p>
+        </div>
+      ` : `
         <div style="padding: 15px; background: #f4f4f5; margin-bottom: 20px; border-left: 4px solid #00CED1;">
           <p style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; margin: 0; color: #18181b;">Video Analizado:</p>
           <p style="font-family: Arial, sans-serif; font-size: 13px; margin: 5px 0 0 0; color: #52525b;">${videoTitle}</p>
+          <p style="font-family: Arial, sans-serif; font-size: 12px; margin: 8px 0 0 0; color: #71717a;">Canal: ${canal}</p>
         </div>
       `;
 
-      const messagesHTML = messages.map((msg) => {
-        const role = msg.role === 'user' ? 'ESTUDIANTE' : 'TUTOR TutorVideoIA';
-        const bgColor = msg.role === 'user' ? '#cffafe' : '#f4f4f5';
-        const borderColor = msg.role === 'user' ? '#00CED1' : '#d4d4d8';
+      const assistantMessage = messages.find((msg) => msg.role === 'assistant');
+      if (!assistantMessage) {
+        setIsExporting(false);
+        return;
+      }
 
-        const contentFormatted = msg.content
-          .replace(/^## (.+)$/gm, '<h2 style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #00CED1; margin: 15px 0 10px 0; padding-bottom: 5px; border-bottom: 1px solid #e4e4e7;">$1</h2>')
-          .replace(/^### (.+)$/gm, '<h3 style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; color: #18181b; margin: 12px 0 8px 0;">$1</h3>')
-          .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight: bold; color: #18181b;">$1</strong>')
-          .replace(/^\* (.+)$/gm, '<li style="font-family: Arial, sans-serif; font-size: 12px; color: #3f3f46; margin: 4px 0;">$1</li>')
-          .replace(/^> (.+)$/gm, '<blockquote style="font-family: Arial, sans-serif; font-style: italic; font-size: 12px; color: #52525b; border-left: 3px solid #00CED1; padding-left: 10px; margin: 10px 0;">$1</blockquote>')
-          .replace(/\n\n/g, '<br/><br/>')
-          .replace(/\n/g, '<br/>');
+      let contentFormatted = assistantMessage.content
+        .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight: bold; color: #18181b; background: #fef9c3; padding: 1px 4px; border-radius: 3px;">$1</strong>')
+        .replace(/^## (.+)$/gm, `<h2 style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: white; background: ${isRecetaStyle ? '#22c55e' : '#00CED1'}; margin: 20px 0 12px 0; padding: 10px 15px; border-radius: 5px;">$1</h2>`)
+        .replace(/^### (.+)$/gm, `<h3 style="font-family: Arial, sans-serif; font-size: 15px; font-weight: bold; color: ${isRecetaStyle ? '#166534' : '#0891b2'}; margin: 15px 0 10px 0; padding-bottom: 5px; border-bottom: 2px solid ${isRecetaStyle ? '#bbf7d0' : '#cffafe'};">$1</h3>`)
+        .replace(/^Paso \d+:/gm, (match) => `<span style="font-weight: bold; color: ${isRecetaStyle ? '#15803d' : '#0891b2'};">${match}</span>`)
+        .replace(/^(\d+)\.\s/gm, '<span style="display: inline-block; width: 25px; height: 25px; background: ' + (isRecetaStyle ? '#22c55e' : '#00CED1') + '; color: white; border-radius: 50%; text-align: center; line-height: 25px; font-weight: bold; font-size: 12px; margin-right: 8px;">$1</span>')
+        .replace(/^[-•]\s(.+)$/gm, `<li style="font-family: Arial, sans-serif; font-size: 12px; color: #3f3f46; margin: 6px 0; padding-left: 10px; list-style: none;">• $1</li>`)
+        .replace(/^> (.+)$/gm, `<blockquote style="font-family: Arial, sans-serif; font-style: italic; font-size: 12px; color: #52525b; border-left: 4px solid ${isRecetaStyle ? '#fbbf24' : '#00CED1'}; background: ${isRecetaStyle ? '#fffbeb' : '#f0fdff'}; padding: 12px 15px; margin: 12px 0; border-radius: 0 5px 5px 0;">"$1"</blockquote>`)
+        .replace(/\n\n/g, '<br/><br/>')
+        .replace(/\n/g, '<br/>');
 
-        return `
-          <div style="margin-bottom: 15px; padding: 15px; background: ${bgColor}; border-left: 4px solid ${borderColor};">
-            <p style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; margin: 0 0 8px 0; color: #71717a; text-transform: uppercase;">${role}</p>
-            <div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #18181b;">${contentFormatted}</div>
+      const messagesHTML = `
+        <div style="background: white; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 10px;">
+          <div style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; line-height: 1.8; color: #18181b;">
+            ${contentFormatted}
           </div>
-        `;
-      }).join('');
+        </div>
+      `;
 
       const footerHTML = `
-        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e4e4e7; text-align: center;">
-          <p style="font-family: Arial, sans-serif; font-size: 10px; color: #a1a1aa;">TutorVideoIA © 2026 - Plataforma Educativa Inteligente</p>
+        <div style="margin-top: 30px; padding: 20px; background: ${isRecetaStyle ? '#f0fdf4' : '#f4f4f5'}; border-top: 2px solid ${isRecetaStyle ? '#22c55e' : '#00CED1'}; text-align: center; border-radius: 0 0 10px 10px;">
+          <p style="font-family: Arial, sans-serif; font-size: 11px; color: #71717a; margin: 0 0 5px 0;">${isRecetaStyle ? '🍳' : '📚'} TutorVideoIA © 2026 - ${isRecetaStyle ? 'Recetas con IA' : 'Plataforma Educativa Inteligente'}</p>
+          <p style="font-family: Arial, sans-serif; font-size: 10px; color: #a1a1aa; margin: 0;">${isRecetaStyle ? 'Generado con inteligencia artificial' : 'Generado por Tutor IA'}</p>
         </div>
       `;
 
@@ -454,8 +524,10 @@ export default function SmartPlayer({
         <head>
           <meta charset="utf-8">
           <style>
-            @page { margin: 20mm 15mm; }
-            body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; color: #18181b; }
+            @page { margin: 15mm 12mm; }
+            body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; color: #18181b; background: #fafafa; }
+            h2 { page-break-before: auto; }
+            h3 { page-break-after: avoid; }
           </style>
         </head>
         <body>
@@ -470,13 +542,13 @@ export default function SmartPlayer({
       const element = document.createElement('div');
       element.innerHTML = fullHTML;
 
-      const safeTitle = (media?.title || 'Resumen_Video').split(/\s+/).slice(0, 3).join('_').replace(/[^a-zA-Z0-9_]/g, '');
+      const safeTitle = (media?.title || 'Receta_Video').split(/\s+/).slice(0, 3).join('_').replace(/[^a-zA-Z0-9_]/g, '');
 
       const opt = {
         margin: 0,
         filename: `${safeTitle}.pdf`,
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        image: { type: 'jpeg' as const, quality: 0.95 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
         jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
       };
 

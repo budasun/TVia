@@ -10,7 +10,8 @@ export type MediaCategory =
   | 'concierto'
   | 'arte'
   | 'cortometraje'
-  | 'entretenimiento';
+  | 'entretenimiento'
+  | 'recetas';
 
 export type CategoryFilter = MediaCategory | 'all';
 export type DurationFilter = 'any' | '20-35' | '36-60' | '>60';

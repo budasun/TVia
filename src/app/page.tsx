@@ -37,13 +37,14 @@ interface SearchResponse {
 
 const CATEGORY_TITLES: Record<CategoryFilter, string> = {
   all: 'Contenido Destacado',
+  recetas: 'Recetas',
   documental: 'Documentales',
   ciencia: 'Ciencia',
   pelicula: 'Películas',
   opera: 'Ópera',
   podcast: 'Podcasts',
   tutorial: 'Tutoriales',
-  concierto: 'Conciertos',
+  concerto: 'Conciertos',
   arte: 'Arte',
   cortometraje: 'Cortogramas',
   entretenimiento: 'TV',

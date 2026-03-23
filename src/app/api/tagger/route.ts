@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const TAGGER_MODEL = 'liquid/lfm-2.5-1.2b-instruct:free';
+const TAGGER_MODEL = 'llama-3.3-70b-versatile';
 
 async function fetchTranscript(videoId: string): Promise<string> {
   try {
@@ -15,6 +15,7 @@ async function fetchTranscript(videoId: string): Promise<string> {
 function extractCategory(title: string, description: string): string {
   const text = `${title} ${description}`.toLowerCase();
   
+  if (text.includes('receta') || text.includes('cocina') || text.includes('chef') || text.includes('gastronomia') || text.includes('comida') || text.includes('plato') || text.includes('cook') || text.includes('cooking')) return 'Recetas';
   if (text.includes('documental') || text.includes('documentary') || text.includes('historia')) return 'Documental';
   if (text.includes('ciencia') || text.includes('science') || text.includes('física') || text.includes('química') || text.includes('biology')) return 'Ciencia';
   if (text.includes('ópera') || text.includes('opera') || text.includes('sinfon') || text.includes('classical')) return 'Ópera';
@@ -38,7 +39,8 @@ function extractTags(title: string, description: string): string[] {
     'physics', 'física', 'chemistry', 'química', 'biology', 'biología',
     'math', 'matemáticas', 'philosophy', 'filosofía', 'psychology',
     'documentary', 'documental', 'education', 'educación', 'tutorial',
-    'space', 'espacio', 'universe', 'universo', 'earth', 'tierra'
+    'space', 'espacio', 'universe', 'universo', 'earth', 'tierra',
+    'receta', 'cocina', 'chef', 'gastronomia', 'comida', 'gourmet'
   ];
   
   keywords.forEach(keyword => {
@@ -65,14 +67,13 @@ export async function POST(req: Request) {
       });
     }
 
-    console.log(`🏷️ CEREBRO 2 (Tagger): Analizando video ${videoId}`);
+    console.log(`🏷️ Tagger: Analizando video ${videoId}`);
     
     const transcriptText = await fetchTranscript(videoId);
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
 
-    // Si no hay API key, usar extracción local
     if (!apiKey) {
-      console.log('⚠️ Sin API key, usando extracción local de tags');
+      console.log('⚠️ Sin API key de Groq, usando extracción local de tags');
       return NextResponse.json({
         tags: extractTags(title || '', description || ''),
         category: extractCategory(title || '', description || '')
@@ -85,19 +86,17 @@ Título: ${title || 'Sin título'}
 Descripción: ${(description || '').substring(0, 300)}
 Transcripción: ${transcriptText.substring(0, 3000)}
 
-CATEGORÍAS VÁLIDAS: Documental, Ciencia, Ópera, Podcast, Tutorial, Concierto, Arte, Película, Educativo
+CATEGORÍAS VÁLIDAS: Documental, Ciencia, Ópera, Podcast, Tutorial, Concierto, Arte, Película, Recetas, Educativo
 
 Responde SOLO con JSON válido (sin markdown, sin explicaciones):
 {"tags": ["tag1", "tag2", "tag3"], "category": "Categoría"}`;
 
     try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
-          'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
           'Content-Type': 'application/json',
-          'X-Title': 'VIDOZCHOOL Tagger',
         },
         body: JSON.stringify({
           model: TAGGER_MODEL,
@@ -111,9 +110,7 @@ Responde SOLO con JSON válido (sin markdown, sin explicaciones):
         const data = await response.json();
         const content = data.choices?.[0]?.message?.content || '';
         
-        // Intentar parsear JSON de la respuesta
         try {
-          // Limpiar la respuesta de posibles caracteres extra
           const cleanContent = content.replace(/```json\n?|\n?```/g, '').trim();
           const jsonMatch = cleanContent.match(/\{[^}]+\}/);
           
@@ -128,12 +125,14 @@ Responde SOLO con JSON válido (sin markdown, sin explicaciones):
         } catch {
           console.log('⚠️ Error parseando JSON del tagger');
         }
+      } else {
+        const errorText = await response.text();
+        console.error(`❌ Error en Tagger: ${response.status} - ${errorText}`);
       }
-    } catch {
-      console.log('⚠️ Error en API del tagger');
+    } catch (err) {
+      console.error('❌ Error en API del Tagger:', err);
     }
 
-    // Fallback: extracción local
     return NextResponse.json({
       tags: extractTags(title || '', description || ''),
       category: extractCategory(title || '', description || '')
