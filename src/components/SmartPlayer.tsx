@@ -53,6 +53,11 @@ function getVimeoId(url: string): string | null {
   return match ? match[1] : null;
 }
 
+function getOkRuId(url: string): string | null {
+  const match = url.match(/ok\.ru\/videoembed\/(\d+)/);
+  return match ? match[1] : null;
+}
+
 function getDriveEmbedUrl(url: string): string | null {
   const match = url.match(/drive\.google\.com\/file\/d\/([^/]+)\//);
   if (match) {
@@ -274,6 +279,11 @@ export default function SmartPlayer({
     const vimeoId = getVimeoId(media.url);
     if (vimeoId) {
       return `https://player.vimeo.com/video/${vimeoId}?autoplay=1`;
+    }
+
+    const okRuId = getOkRuId(media.url);
+    if (okRuId) {
+      return `https://ok.ru/videoembed/${okRuId}?autoplay=1&nochat=1`;
     }
 
     return null;
@@ -737,11 +747,32 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
                     </a>
                   </div>
                 </div>
+              ) : media?.url?.includes('ok.ru') || getOkRuId(media?.url || '') ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-800 z-20">
+                  <div className="text-center p-8 max-w-md">
+                    <div className="w-20 h-20 mx-auto mb-4 bg-orange-500 rounded-full flex items-center justify-center">
+                      <Play className="w-10 h-10 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">Video de OK.RU</h3>
+                    <p className="text-zinc-400 mb-6 text-sm">
+                      Haz clic para abrir el video en OK.RU
+                    </p>
+                    <a
+                      href={`https://ok.ru/video/${getOkRuId(media.url || '') || ''}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-400 text-white font-bold border-2 border-white transition-colors"
+                    >
+                      <Play className="w-5 h-5" />
+                      Abrir en OK.RU
+                    </a>
+                  </div>
+                </div>
               ) : media?.url ? (
                 <iframe
-                  src={media.url}
+                  src={embedUrl || media.url}
                   className="absolute inset-0 w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                   allowFullScreen
                   style={{ border: 0 }}
                 />
