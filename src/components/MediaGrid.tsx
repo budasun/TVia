@@ -17,11 +17,13 @@ const categoryBadgeColors: Record<string, string> = {
   pelicula: 'bg-rose-400 text-zinc-900',
   podcast: 'bg-amber-400 text-zinc-900',
   tutorial: 'bg-emerald-400 text-zinc-900',
-  concerto: 'bg-pink-400 text-zinc-900',
+  concierto: 'bg-pink-400 text-zinc-900',
   arte: 'bg-violet-400 text-zinc-900',
   entretenimiento: 'bg-yellow-400 text-zinc-900',
   cortometraje: 'bg-orange-400 text-zinc-900',
   recetas: 'bg-green-400 text-zinc-900',
+  series: 'bg-red-400 text-white',
+  noticias: 'bg-blue-400 text-white',
 };
 
 const categoryLabels: Record<string, string> = {
@@ -31,11 +33,13 @@ const categoryLabels: Record<string, string> = {
   pelicula: 'Película',
   podcast: 'Podcast',
   tutorial: 'Tutorial',
-  concerto: 'Concierto',
+  concierto: 'Concierto',
   arte: 'Arte',
   entretenimiento: 'TV',
-  cortometraje: 'Cortometraje',
+  cortometraje: 'Corto',
   recetas: 'Receta',
+  series: 'Serie',
+  noticias: 'Noticia',
 };
 
 function formatDate(dateString: string | Date | undefined): string {

@@ -7,6 +7,7 @@ import OmniSearch from '@/components/OmniSearch';
 import MediaGrid from '@/components/MediaGrid';
 import type { UnifiedMedia, CategoryFilter, SearchFilters } from '@/types';
 
+const InstallPWA = dynamic(() => import('@/components/InstallPWA'), { ssr: false });
 const SmartPlayer = dynamic(() => import('@/components/SmartPlayer'), { ssr: false });
 const ChatInput = dynamic(() => import('@/components/ChatInput'), { ssr: false });
 
@@ -46,8 +47,10 @@ const CATEGORY_TITLES: Record<CategoryFilter, string> = {
   tutorial: 'Tutoriales',
   concierto: 'Conciertos',
   arte: 'Arte',
-  cortometraje: 'Cortogramas',
+  cortometraje: 'Cortos',
   entretenimiento: 'TV',
+  series: 'Series',
+  noticias: 'Noticias',
 };
 
 export default function Home() {
@@ -342,6 +345,8 @@ export default function Home() {
           />
         </div>
       )}
+
+      <InstallPWA />
     </div>
   );
 }

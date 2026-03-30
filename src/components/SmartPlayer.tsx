@@ -575,7 +575,7 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
   const handleVideoPlay = () => setIsPaused(false);
 
   const handleVideoStateChange = (event: any) => {
-    if (event.data === 0 && category === 'entretenimiento' && onNext) {
+    if (event.data === 0 && (category === 'entretenimiento' || category === 'series') && onNext) {
       if (youtubePlayer) {
         localStorage.setItem('videoschool_volume', youtubePlayer.getVolume().toString());
         localStorage.setItem('videoschool_muted', youtubePlayer.isMuted().toString());

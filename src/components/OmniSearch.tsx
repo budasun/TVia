@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Sparkles, Film, Microscope, Music, Podcast, Clock, Calendar, ChevronDown, Drama, Clapperboard, Palette, GraduationCap, Tv, UtensilsCrossed } from 'lucide-react';
+import { Search, Sparkles, Film, Microscope, Music, Podcast, Clock, Calendar, ChevronDown, Drama, Clapperboard, Palette, GraduationCap, Tv, UtensilsCrossed, BookOpen, Newspaper } from 'lucide-react';
 import type { CategoryFilter, DurationFilter, UploadDateFilter, SearchFilters } from '@/types';
 
 interface OmniSearchProps {
@@ -14,17 +14,19 @@ interface OmniSearchProps {
 
 const categories = [
   { id: 'all' as CategoryFilter, label: 'Todo', icon: Sparkles },
+  { id: 'noticias' as CategoryFilter, label: 'Noticias', icon: Newspaper },
   { id: 'recetas' as CategoryFilter, label: 'Recetas', icon: UtensilsCrossed },
-  { id: 'documental' as CategoryFilter, label: 'Documentales', icon: Film },
+  { id: 'documental' as CategoryFilter, label: 'Docu', icon: Film },
   { id: 'ciencia' as CategoryFilter, label: 'Ciencia', icon: Microscope },
-  { id: 'pelicula' as CategoryFilter, label: 'Películas', icon: Drama },
-  { id: 'cortometraje' as CategoryFilter, label: 'Cortogramas', icon: Clapperboard },
+  { id: 'pelicula' as CategoryFilter, label: 'Peli', icon: Drama },
+  { id: 'cortometraje' as CategoryFilter, label: 'Cortos', icon: Clapperboard },
   { id: 'opera' as CategoryFilter, label: 'Ópera', icon: Music },
   { id: 'podcast' as CategoryFilter, label: 'Podcast', icon: Podcast },
   { id: 'tutorial' as CategoryFilter, label: 'Tutoriales', icon: GraduationCap },
   { id: 'concierto' as CategoryFilter, label: 'Conciertos', icon: Music },
   { id: 'arte' as CategoryFilter, label: 'Arte', icon: Palette },
   { id: 'entretenimiento' as CategoryFilter, label: 'TV', icon: Tv },
+  { id: 'series' as CategoryFilter, label: 'Series', icon: BookOpen },
 ];
 
 const durationOptions = [

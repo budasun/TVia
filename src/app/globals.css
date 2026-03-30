@@ -187,3 +187,212 @@ body {
 :fullscreen, ::-webkit-full-screen {
   background-color: #000000 !important;
 }
+
+/* ========== PWA Install Button ========== */
+.install-pwa-button {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #22D3EE 0%, #A855F7 50%, #D946EF 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow:
+    0 4px 20px rgba(34, 211, 238, 0.35),
+    0 2px 8px rgba(217, 70, 239, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.3s ease;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.install-pwa-button:hover {
+  box-shadow:
+    0 6px 30px rgba(34, 211, 238, 0.5),
+    0 4px 14px rgba(217, 70, 239, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.install-pwa-label {
+  white-space: nowrap;
+}
+
+/* Pulsing ring animation */
+.install-pwa-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50px;
+  border: 2px solid rgba(34, 211, 238, 0.5);
+  animation: pwa-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes pwa-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+/* Mobile: icon-only button */
+@media (max-width: 639px) {
+  .install-pwa-button {
+    bottom: 140px;
+    right: 16px;
+    padding: 14px;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    justify-content: center;
+  }
+  .install-pwa-label {
+    display: none;
+  }
+}
+
+/* ========== iOS Guide Modal ========== */
+.ios-guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 24px;
+}
+
+.ios-guide-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.ios-guide-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f4f4f5;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #71717a;
+  transition: background 0.2s;
+}
+
+.ios-guide-close:hover {
+  background: #e4e4e7;
+}
+
+.ios-guide-icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.ios-guide-title {
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  color: #18181b;
+  margin-bottom: 20px;
+}
+
+.ios-guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.ios-guide-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.ios-guide-step-number {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22D3EE, #D946EF);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ios-guide-step p {
+  color: #3f3f46;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+  padding-top: 2px;
+}
+
+.ios-guide-ok {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #22D3EE 0%, #D946EF 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.ios-guide-ok:hover {
+  opacity: 0.9;
+}
+
+/* ========== Install Toast ========== */
+.install-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: #18181b;
+  color: #ffffff;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.install-toast-icon {
+  font-size: 20px;
+}

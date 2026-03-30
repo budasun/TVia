@@ -3,7 +3,7 @@ import type { UnifiedMedia, MediaCategory, CategoryFilter } from '@/types';
 import YouTube from 'youtube-sr';
 
 const searchCache = new Map<string, { timestamp: number; data: UnifiedMedia[] }>();
-const CACHE_DURATION = 1000 * 60 * 60 * 12;
+const CACHE_DURATION = 1000 * 60 * 60 * 8;
 const TV_CACHE_DURATION = 1000 * 60 * 60 * 24 * 365;
 
 function getCacheDuration(category: string): number {
@@ -364,6 +364,17 @@ const CATEGORY_QUERIES: Record<string, string[]> = {
   recetas: ['recetas de cocina', 'cocina mexicana', 'cocina italiana', 'cocina japonesa', 'cocina tailandesa', 'cocina arabe', 'recetas vegetarianas', 'comida fitness', 'cocina Nicaraguense', 'cocina Hondureña', 'cocina Costarricense', 'cocina Argentina', 'cocina Brasileña', 'cocina Colombiana', 'cocina Chilena', 'cocina Peruana'],
 };
 
+const ONE_PIECE_EPISODES: UnifiedMedia[] = [
+  { id: 'onepiece-t2x01', title: 'One Piece T2x01 - Capítulo 1', source: 'embed', url: 'https://barmonrey.com/player/2METHCQ7tp5Ha96/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 1', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+  { id: 'onepiece-t2x02', title: 'One Piece T2x02 - Capítulo 2', source: 'embed', url: 'https://barmonrey.com/player/nFzmO77bar0KGQD/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 2', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+  { id: 'onepiece-t2x03', title: 'One Piece T2x03 - Capítulo 3', source: 'embed', url: 'https://barmonrey.com/player/YJ2IMygWaKNwM0I/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 3', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+  { id: 'onepiece-t2x04', title: 'One Piece T2x04 - Capítulo 4', source: 'embed', url: 'https://barmonrey.com/player/cZP5n6LQpHKhIBj/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 4', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+  { id: 'onepiece-t2x05', title: 'One Piece T2x05 - Capítulo 5', source: 'embed', url: 'https://barmonrey.com/player/8VODbCewtDnlKLK/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 5', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+  { id: 'onepiece-t2x06', title: 'One Piece T2x06 - Capítulo 6', source: 'embed', url: 'https://barmonrey.com/player/XG0rBElgV3KvJz9/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 6', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+  { id: 'onepiece-t2x07', title: 'One Piece T2x07 - Capítulo 7', source: 'embed', url: 'https://barmonrey.com/player/v6ldYTzarDtUaGY/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 7', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+  { id: 'onepiece-t2x08', title: 'One Piece T2x08 - Capítulo 8', source: 'embed', url: 'https://barmonrey.com/player/iV3N2YBmiKdXJpR/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 8', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
+];
+
 const ALIASES: Record<string, string[]> = {
   'ia': ['inteligencia artificial', 'artificial intelligence', 'ia', 'ai'],
   'ai': ['artificial intelligence', 'inteligencia artificial', 'ai', 'ia'],
@@ -474,51 +485,238 @@ export async function GET(request: Request) {
         allVideos = query === '' ? [...BREAKINGBAD_EPISODES, ...SIMPSONS_EPISODES, ...youtubeVideos] : youtubeVideos;
         searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
         console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
+      } else if (category === 'series') {
+        searchCache.delete(cacheKey);
+        console.log('🎬 Cargando Series - One Piece Temporada 2...');
+        if (query === '' || query.toLowerCase().includes('one piece')) {
+          allVideos = [...ONE_PIECE_EPISODES];
+          searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+          console.log(`💾 Guardado Series: ${allVideos.length} episodios de One Piece`);
+        } else {
+          let youtubeVideosSeries: any[] = [];
+          const searchPromises = [
+            YouTube.search(`${query} serie completa`, { limit: 20, type: "video" }).catch(() => []),
+            YouTube.search(`${query} temporada completa`, { limit: 20, type: "video" }).catch(() => [])
+          ];
+          const resultsMatrix = await Promise.all(searchPromises);
+          youtubeVideosSeries = Array.from(new Map(resultsMatrix.flat().filter((v: {id?: string}) => v.id).map((v: any) => [v.id, v])).values());
+          youtubeVideosSeries = youtubeVideosSeries.map((v: any) => ({
+            id: v.id || '',
+            title: v.title || '',
+            source: 'youtube' as const,
+            url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
+            thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
+            description: v.description || `Serie de ${v.channel?.name || 'YouTube'}`,
+            duration: v.durationFormatted || '',
+            author: v.channel?.name || 'Desconocido',
+            category: 'series',
+            tags: [],
+            createdAt: new Date(),
+            publishedAt: new Date().toISOString(),
+            durationSeconds: 0,
+          }));
+          
+          searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+          console.log(`💾 Guardado Series: ${allVideos.length} videos`);
+        }
+      } else if (category === 'noticias') {
+        searchCache.delete(cacheKey);
+        console.log('🗞️ Cargando Noticias con prioridad Latinus y Nicaragua...');
+        
+        try {
+          const latinusQueries = [
+            'LATINUS noticias',
+            'Latinus tv',
+            'LuisitoComunica Latinus'
+          ];
+          
+          const NicaraguaQueries = [
+            'noticias Nicaragua 2026',
+            'Nicaragua Ortega',
+            'Diario Azul Nicaragua',
+            'Canal 10 Nicaragua noticias',
+            'El 19 digital Nicaragua'
+          ];
+          
+          const canalOnceQueries = [
+            'Canal Once noticias',
+            'Once Noticias completo',
+            'TVOnceChannel'
+          ];
+          
+          const milenioQueries = [
+            'Milenio Noticias',
+            'Milenio Tv noticias',
+            'Grupo Milenio noticias'
+          ];
+          
+          const generalNewsQueries = [
+            'noticias internacionales hoy español',
+            'telemundo completo hoy',
+            'univision noticiero nacional',
+            'DW noticias mundo español',
+            'BBC News Mundo',
+            'France 24 en español',
+            'ntn24 noticias america'
+          ];
+          
+          const latinusPromises = latinusQueries.map(q => YouTube.search(q, { limit: 10, type: "video" }).catch(() => []));
+          const latinusResults = (await Promise.all(latinusPromises)).flat();
+          
+          const NicaraguaPromises = NicaraguaQueries.map(q => YouTube.search(q, { limit: 8, type: "video" }).catch(() => []));
+          const NicaraguaResults = (await Promise.all(NicaraguaPromises)).flat();
+          
+          const canalOncePromises = canalOnceQueries.map(q => YouTube.search(q, { limit: 8, type: "video" }).catch(() => []));
+          const canalOnceResults = (await Promise.all(canalOncePromises)).flat();
+          
+          const milenioPromises = milenioQueries.map(q => YouTube.search(q, { limit: 8, type: "video" }).catch(() => []));
+          const milenioResults = (await Promise.all(milenioPromises)).flat();
+          
+          const generalPromises = generalNewsQueries.map(q => YouTube.search(q, { limit: 10, type: "video" }).catch(() => []));
+          const generalResults = (await Promise.all(generalPromises)).flat();
+          
+          const allRawResults = [...latinusResults, ...NicaraguaResults, ...canalOnceResults, ...milenioResults, ...generalResults];
+          
+          const uniqueMap = new Map();
+          allRawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
+          let youtubeVideosNews = Array.from(uniqueMap.values());
+          
+          youtubeVideosNews = youtubeVideosNews.map((v: any) => {
+            const titleLower = (v.title || '').toLowerCase();
+            const channelLower = (v.channel?.name || '').toLowerCase();
+            const textToCheck = titleLower + ' ' + channelLower;
+            
+            let priority = 3;
+            if (textToCheck.includes('latinus') || textToCheck.includes('latin us')) {
+              priority = 1;
+            } else if (
+              textToCheck.includes('nicaragua') || 
+              textToCheck.includes('ortega') || 
+              textToCheck.includes('daniel ortega') ||
+              textToCheck.includes('canal once') ||
+              textToCheck.includes('once noticias') ||
+              textToCheck.includes('tvonce') ||
+              textToCheck.includes('milenio')
+            ) {
+              priority = 2;
+            }
+            
+            return { ...v, priority };
+          });
+          
+          // Mezclar las noticias aleatoriamente (Fisher-Yates)
+          for (let i = youtubeVideosNews.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [youtubeVideosNews[i], youtubeVideosNews[j]] = [youtubeVideosNews[j], youtubeVideosNews[i]];
+          }
+          
+          allVideos = youtubeVideosNews.map((v: any) => ({
+            id: v.id || '',
+            title: v.title || '',
+            source: 'youtube' as const,
+            url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
+            thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
+            description: v.description || `Video de ${v.channel?.name || 'YouTube'}`,
+            duration: v.durationFormatted || '',
+            author: v.channel?.name || 'Desconocido',
+            category: 'noticias',
+            tags: [],
+            createdAt: new Date(),
+            publishedAt: new Date().toISOString(),
+            durationSeconds: 0,
+          }));
+          
+          searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+          console.log(`💾 Guardado Noticias: ${allVideos.length} videos`);
+        } catch (newsError) {
+          console.error('Error en noticias:', newsError);
+          allVideos = [];
+        }
       } else {
         console.log('🕵️ Iniciando Deep Matrix Scraping para:', cacheKey);
         const normQuery = query.toLowerCase();
         const queryForYoutube = ALIASES[normQuery] ? ALIASES[normQuery][0] : query;
 
         let baseStrings: string[] = [];
-        if (query === '') {
-          baseStrings = category === 'all' ? ['documentales educativos', 'ciencia explicada', 'cursos gratis'] : CATEGORY_QUERIES[category];
-        } else {
-          if (category === 'all') {
-            baseStrings = [queryForYoutube, `${queryForYoutube} documental`, `${queryForYoutube} explicado`];
-          } else {
-            baseStrings = CATEGORY_QUERIES[category].map(catKw => `${queryForYoutube} ${catKw}`);
-          }
-        }
-
-        const modifiers = ['', '2026', '2025', 'nuevo'];
-        const searchStrings = baseStrings.flatMap(base => modifiers.map(mod => mod ? `${base} ${mod}` : base));
-        console.log(`🚀 Lanzando ${searchStrings.length} hilos de búsqueda para máxima cobertura...`);
-
-        const searchPromises = searchStrings.map(searchStr => YouTube.search(searchStr, { limit: 30, type: "video" }).catch(() => []));
-        const resultsMatrix = await Promise.all(searchPromises);
-        const rawResults = resultsMatrix.flat();
-        const uniqueMap = new Map();
-        const stopWords = new Set(['de', 'el', 'la', 'en', 'un', 'una', 'los', 'las', 'por', 'con', 'para', 'del', 'que', 'se', 'su', 'al', 'y', 'o', 'a', 'to', 'of', 'in', 'and', 'for', 'the']);
-        const baseKeywords = normQuery.split(' ').filter(word => word.length >= 2 && !stopWords.has(word));
-        const keywords = baseKeywords.flatMap(kw => ALIASES[kw] ? ALIASES[kw] : [kw]).map(normalizeText);
-        rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
-
-        let filteredRaw = Array.from(uniqueMap.values());
-        if (keywords.length > 0 && query !== 'documentales' && query !== '') {
-          const strictFiltered = filteredRaw.filter((v: { title?: string; description?: string; channel?: { name?: string } }) => {
-            const textToSearch = normalizeText(`${v.title} ${v.description || ''} ${v.channel?.name || ''}`);
-            return keywords.some(kw => {
-              if (kw.includes(' ')) return textToSearch.includes(kw);
-              const safeKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-              const regex = new RegExp(`\\b${safeKw}\\b`, 'i');
-              return regex.test(textToSearch);
-            });
+        
+        if (category === 'all' && query === '') {
+          const allCategories = ['noticias', 'podcast', 'tutorial', 'concierto', 'arte', 'cortometraje', 'recetas', 'pelicula', 'documental', 'ciencia', 'conferencia'];
+          const categoryPromises = allCategories.map(cat => {
+            const catQueries = CATEGORY_QUERIES[cat] || [];
+            return Promise.all(catQueries.slice(0, 3).map(q => YouTube.search(q, { limit: 15, type: "video" }).catch(() => [])));
           });
-          if (strictFiltered.length >= 40) filteredRaw = strictFiltered;
-          else console.log(`⚠️ Filtro muy estricto (${strictFiltered.length} res). Activando Safe Fallback.`);
-        }
+          
+          const resultsMatrix = await Promise.all(categoryPromises);
+          const rawResults = resultsMatrix.flat().flat();
+          
+          const uniqueMap = new Map();
+          rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
+          
+          let filteredRaw = Array.from(uniqueMap.values());
+          
+          for (let i = filteredRaw.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [filteredRaw[i], filteredRaw[j]] = [filteredRaw[j], filteredRaw[i]];
+          }
+          
+          allVideos = filteredRaw.map((v: { id?: string; title?: string; description?: string; thumbnail?: { url?: string }; channel?: { name?: string }; durationFormatted?: string }) => ({
+            id: v.id || '',
+            title: v.title || '',
+            source: 'youtube' as const,
+            url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
+            thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
+            description: v.description || `Video de ${v.channel?.name || 'YouTube'}`,
+            duration: v.durationFormatted || '',
+            author: v.channel?.name || 'Desconocido',
+            category: detectCategory(v.title || '', v.description || ''),
+            tags: [],
+            createdAt: new Date(),
+            publishedAt: new Date().toISOString(),
+            durationSeconds: 0,
+          }));
+          
+          searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+          console.log(`💾 Guardado TODO (mezclado): ${allVideos.length} videos`);
+        } else {
+          if (query === '') {
+            baseStrings = CATEGORY_QUERIES[category];
+          } else {
+            if (category === 'all') {
+              baseStrings = [queryForYoutube, `${queryForYoutube} documental`, `${queryForYoutube} explicado`];
+            } else {
+              baseStrings = CATEGORY_QUERIES[category].map(catKw => `${queryForYoutube} ${catKw}`);
+            }
+          }
 
-        allVideos = filteredRaw.map((v: { id?: string; title?: string; description?: string; thumbnail?: { url?: string }; channel?: { name?: string }; durationFormatted?: string }) => ({
+          const modifiers = ['', '2026', '2025', 'nuevo'];
+          const searchStrings = baseStrings.flatMap(base => modifiers.map(mod => mod ? `${base} ${mod}` : base));
+          console.log(`🚀 Lanzando ${searchStrings.length} hilos de búsqueda para máxima cobertura...`);
+
+          const searchPromises = searchStrings.map(searchStr => YouTube.search(searchStr, { limit: 30, type: "video" }).catch(() => []));
+          const resultsMatrix = await Promise.all(searchPromises);
+          const rawResults = resultsMatrix.flat();
+          const uniqueMap = new Map();
+          const stopWords = new Set(['de', 'el', 'la', 'en', 'un', 'una', 'los', 'las', 'por', 'con', 'para', 'del', 'que', 'se', 'su', 'al', 'y', 'o', 'a', 'to', 'of', 'in', 'and', 'for', 'the']);
+          const baseKeywords = normQuery.split(' ').filter(word => word.length >= 2 && !stopWords.has(word));
+          const keywords = baseKeywords.flatMap(kw => ALIASES[kw] ? ALIASES[kw] : [kw]).map(normalizeText);
+          rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
+
+          let filteredRaw = Array.from(uniqueMap.values());
+          if (keywords.length > 0 && query !== 'documentales' && query !== '') {
+            const strictFiltered = filteredRaw.filter((v: { title?: string; description?: string; channel?: { name?: string } }) => {
+              const textToSearch = normalizeText(`${v.title} ${v.description || ''} ${v.channel?.name || ''}`);
+              return keywords.some(kw => {
+                if (kw.includes(' ')) return textToSearch.includes(kw);
+                const safeKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`\\b${safeKw}\\b`, 'i');
+                return regex.test(textToSearch);
+              });
+            });
+            if (strictFiltered.length >= 40) filteredRaw = strictFiltered;
+            else console.log(`⚠️ Filtro muy estricto (${strictFiltered.length} res). Activando Safe Fallback.`);
+          }
+
+          allVideos = filteredRaw.map((v: { id?: string; title?: string; description?: string; thumbnail?: { url?: string }; channel?: { name?: string }; durationFormatted?: string }) => ({
           id: v.id || '',
           title: v.title || '',
           source: 'youtube' as const,
@@ -537,6 +735,7 @@ export async function GET(request: Request) {
         if (category === 'pelicula' && query === '') allVideos = [...PELICULAS, ...allVideos];
         searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
         console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
+        }
       }
     }
 

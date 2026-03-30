@@ -1,4 +1,4 @@
-export type MediaSource = 'youtube' | 'vimeo' | 'ted' | 'archive' | 'mega';
+export type MediaSource = 'youtube' | 'vimeo' | 'ted' | 'archive' | 'mega' | 'embed';
 
 export type MediaCategory = 
   | 'documental' 
@@ -11,7 +11,9 @@ export type MediaCategory =
   | 'arte'
   | 'cortometraje'
   | 'entretenimiento'
-  | 'recetas';
+  | 'recetas'
+  | 'series'
+  | 'noticias';
 
 export type CategoryFilter = MediaCategory | 'all';
 export type DurationFilter = 'any' | '20-35' | '36-60' | '>60';
