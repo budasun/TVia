@@ -8,6 +8,7 @@ import MediaGrid from '@/components/MediaGrid';
 import type { UnifiedMedia, CategoryFilter, SearchFilters } from '@/types';
 
 const InstallPWA = dynamic(() => import('@/components/InstallPWA'), { ssr: false });
+const IOSInstallPrompt = dynamic(() => import('@/components/IOSInstallPrompt'), { ssr: false });
 const SmartPlayer = dynamic(() => import('@/components/SmartPlayer'), { ssr: false });
 const ChatInput = dynamic(() => import('@/components/ChatInput'), { ssr: false });
 
@@ -347,6 +348,7 @@ export default function Home() {
       )}
 
       <InstallPWA />
+      <IOSInstallPrompt />
     </div>
   );
 }
