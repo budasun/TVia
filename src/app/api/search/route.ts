@@ -364,6 +364,19 @@ const CATEGORY_QUERIES: Record<string, string[]> = {
   recetas: ['recetas de cocina', 'cocina mexicana', 'cocina italiana', 'cocina japonesa', 'cocina tailandesa', 'cocina arabe', 'recetas vegetarianas', 'comida fitness', 'cocina Nicaraguense', 'cocina Hondureña', 'cocina Costarricense', 'cocina Argentina', 'cocina Brasileña', 'cocina Colombiana', 'cocina Chilena', 'cocina Peruana'],
 };
 
+const BETTER_CALL_SAUL_EPISODES: UnifiedMedia[] = [
+  { id: 'bettercallsaul-t1x01', title: 'Better Call Saul T1x01 - Uno (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/n5qt4h0u6.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/kXPlwZm3RefxpSU5E3Mu4Yyvn40.jpg', description: 'Better Call Saul T1x01 - Jimmy McGill, un estafador de pequeña escala, trabaja para hacer realidad su sueño de ejercer la abogacía en Albuquerque.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x02', title: 'Better Call Saul T1x02 - Mijo (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/7m3r4zbmp.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/wOkddHcnj8Fae8VbLbKMh641HHy.jpg', description: 'Better Call Saul T1x02 - Jimmy ayuda a un cliente a resolver un problema de slip and fall.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x03', title: 'Better Call Saul T1x03 - Nacho (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/642ehn4xn.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/xF1LKhLd0xAcddb9HrgAJ2W6gav.jpg', description: 'Better Call Saul T1x03 - Nacho busca proteger a su padre de las actividades del cártel.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x04', title: 'Better Call Saul T1x04 - Héroe (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/kdsjnv558.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/1effMQQBq8BhBQXeqLNFcr8RGVb.jpg', description: 'Better Call Saul T1x04 - Jimmy toma una decisión heroica en el vecindario.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x05', title: 'Better Call Saul T1x05 - Pastorcito alpino (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/n6gaq0fap.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/854TkmG8cP00FmIR8QjTsa0ajVE.jpg', description: 'Better Call Saul T1x05 - Jimmy trabaja en el salón de belleza de Kim.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x06', title: 'Better Call Saul T1x06 - Pasado (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/gcpdhev93.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/7tSG2a6GSQyEcWH3P5e4zNqjVZO.jpg', description: 'Better Call Saul T1x06 - Se revelan secretos del pasado de Jimmy.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x07', title: 'Better Call Saul T1x07 - Bingo (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/9mudehhs2.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/f1MVCLlx6pOS3DJo4qRLVCNRuSX.jpg', description: 'Better Call Saul T1x07 - Jimmy participa en una operación de bingo.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x08', title: 'Better Call Saul T1x08 - Rico (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/np3dqtavm.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/5vpI6D2n4zma4xqQBRq2Bz3tHu5.jpg', description: 'Better Call Saul T1x08 - Jimmy se convierte en un hombre Rico.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x09', title: 'Better Call Saul T1x09 - Pimiento (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/r8q1dxu5f.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/iCMwMQstYZz8SRsiULMtiiP2xes.jpg', description: 'Better Call Saul T1x09 - El conflicto con el cártel se intensifica.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+  { id: 'bettercallsaul-t1x10', title: 'Better Call Saul T1x10 - Marco (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/jvcjjx0x8.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/eUl8LoEhEtIy0kdyvwgo2ZNSH9B.jpg', description: 'Better Call Saul T1x10 (Final de Temporada) - Jimmy viaja a Cicero para una última aventura con Marco.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
+];
+
 const ONE_PIECE_EPISODES: UnifiedMedia[] = [
   { id: 'onepiece-t2x01', title: 'One Piece T2x01 - Capítulo 1', source: 'embed', url: 'https://barmonrey.com/player/2METHCQ7tp5Ha96/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 1', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
   { id: 'onepiece-t2x02', title: 'One Piece T2x02 - Capítulo 2', source: 'embed', url: 'https://barmonrey.com/player/nFzmO77bar0KGQD/', thumbnail: 'https://pelis182.net/wp-content/uploads/2026/03/onepiece2.jpg', description: 'One Piece Temporada 2 - Capítulo 2', category: 'series', tags: ['one piece', 'anime', 'temporada 2'], author: 'Pelis182', duration: '' },
@@ -487,11 +500,11 @@ export async function GET(request: Request) {
         console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
       } else if (category === 'series') {
         searchCache.delete(cacheKey);
-        console.log('🎬 Cargando Series - One Piece Temporada 2...');
-        if (query === '' || query.toLowerCase().includes('one piece')) {
-          allVideos = [...ONE_PIECE_EPISODES];
+        console.log('🎬 Cargando Series - Better Call Saul + One Piece...');
+        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece')) {
+          allVideos = [...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
-          console.log(`💾 Guardado Series: ${allVideos.length} episodios de One Piece`);
+          console.log(`💾 Guardado Series: ${allVideos.length} episodios (Better Call Saul + One Piece)`);
         } else {
           let youtubeVideosSeries: any[] = [];
           const searchPromises = [
