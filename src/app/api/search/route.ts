@@ -345,6 +345,7 @@ const SIMPSONS_EPISODES: UnifiedMedia[] = [
 ];
 
 const PELICULAS: UnifiedMedia[] = [
+  { id: 'pelicula-intergalactico', title: 'GUÍA DEL VIAJERO INTERGALÁCTICO', source: 'youtube', url: 'https://drive.google.com/file/d/1OLjNKtj_oVH5m-a98NC833iwX2VRocAz/view', thumbnail: 'https://es.web.img3.acsta.net/pictures/npic/7.jpg', description: 'Guía del Viajero Intergaláctico - Película completa', category: 'pelicula', tags: ['pelicula', 'ciencia ficción', 'comedia'], author: 'Desconocido', duration: '' },
   { id: 'pelicula-adaline', title: 'EL SECRETO DE ADALINE', source: 'youtube', url: 'https://drive.google.com/file/d/0B95aowXSQsJ8OVhKbEV0dzFmUk0/view?resourcekey=0-fLr1pEFc7Wl894xVapGbtQ', thumbnail: 'https://es.web.img3.acsta.net/pictures/15/05/14/17/04/007466.jpg', description: 'EL SECRETO DE ADALINE - Película', category: 'pelicula', tags: [], author: 'Desconocido', duration: '112 min' },
 ];
 
