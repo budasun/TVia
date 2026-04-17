@@ -375,6 +375,16 @@ const CATEGORY_QUERIES: Record<string, string[]> = {
   recetas: ['recetas de cocina', 'cocina mexicana', 'cocina italiana', 'cocina japonesa', 'cocina tailandesa', 'cocina arabe', 'recetas vegetarianas', 'comida fitness', 'cocina Nicaraguense', 'cocina Hondureña', 'cocina Costarricense', 'cocina Argentina', 'cocina Brasileña', 'cocina Colombiana', 'cocina Chilena', 'cocina Peruana'],
 };
 
+const BEBE_RENO_EPISODES: UnifiedMedia[] = [
+  { id: 'bebereno-t1x01', title: 'Bebé Reno T1x01 - Capítulo 1 (2024)', source: 'embed', url: 'https://barmonrey.com/player/kbOnhBqH40hDl5V/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'Bebé Reno Temporada 1 - Donny es un comediante que trabaja como barman. Una tarde nota la presencia de una mujer que parece vulnerable, pero tras ayudarle, ella comienza a obsesionarse con él.', category: 'series', tags: ['bebé reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
+  { id: 'bebereno-t1x02', title: 'Bebé Reno T1x02 - Capítulo 2 (2024)', source: 'embed', url: 'https://barmonrey.com/player/nfKIK3HpgyxQzLf/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'Bebé Reno Temporada 1 - Capítulo 2', category: 'series', tags: ['bebé reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
+  { id: 'bebereno-t1x03', title: 'Bebé Reno T1x03 - Capítulo 3 (2024)', source: 'embed', url: 'https://barmonrey.com/player/E8KFjlJgX0teq3V/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'Bebé Reno Temporada 1 - Capítulo 3', category: 'series', tags: ['bebé reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
+  { id: 'bebereno-t1x04', title: 'Bebé Reno T1x04 - Capítulo 4 (2024)', source: 'embed', url: 'https://barmonrey.com/player/X2hLUCdvdVWQgUM/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'Bebé Reno Temporada 1 - Capítulo 4', category: 'series', tags: ['bebé reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
+  { id: 'bebereno-t1x05', title: 'Bebé Reno T1x05 - Capítulo 5 (2024)', source: 'embed', url: 'https://barmonrey.com/player/zB5c50JLOodaY19/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'Bebé Reno Temporada 1 - Capítulo 5', category: 'series', tags: ['bebé reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
+  { id: 'bebereno-t1x06', title: 'Bebé Reno T1x06 - Capítulo 6 (2024)', source: 'embed', url: 'https://barmonrey.com/player/xP98tibNKvtR34q/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'Bebé Reno Temporada 1 - Capítulo 6', category: 'series', tags: ['bebé reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
+  { id: 'bebereno-t1x07', title: 'Bebé Reno T1x07 - Capítulo 7 (2024)', source: 'embed', url: 'https://barmonrey.com/player/0xAX6jel8DnwRdw/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'Bebé Reno Temporada 1 - Capítulo 7', category: 'series', tags: ['bebé reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
+];
+
 const BETTER_CALL_SAUL_EPISODES: UnifiedMedia[] = [
   { id: 'bettercallsaul-t1x01', title: 'Better Call Saul T1x01 - Uno (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/n5qt4h0u6.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/kXPlwZm3RefxpSU5E3Mu4Yyvn40.jpg', description: 'Better Call Saul T1x01 - Jimmy McGill, un estafador de pequeña escala, trabaja para hacer realidad su sueño de ejercer la abogacía en Albuquerque.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
   { id: 'bettercallsaul-t1x02', title: 'Better Call Saul T1x02 - Mijo (Español Latino)', source: 'embed', url: 'https://cine-seguro.xyz/stream/7m3r4zbmp.mp4', thumbnail: 'https://image.tmdb.org/t/p/w500/wOkddHcnj8Fae8VbLbKMh641HHy.jpg', description: 'Better Call Saul T1x02 - Jimmy ayuda a un cliente a resolver un problema de slip and fall.', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '47 min' },
@@ -570,11 +580,11 @@ export async function GET(request: Request) {
         console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
       } else if (category === 'series') {
         searchCache.delete(cacheKey);
-        console.log('🎬 Cargando Series - Better Call Saul + One Piece...');
-        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece')) {
-          allVideos = [...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES];
+        console.log('🎬 Cargando Series - Bebé Reno + Better Call Saul + One Piece...');
+        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno')) {
+          allVideos = [...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
-          console.log(`💾 Guardado Series: ${allVideos.length} episodios (Better Call Saul + One Piece)`);
+          console.log(`💾 Guardado Series: ${allVideos.length} episodios (Bebé Reno + Better Call Saul + One Piece)`);
         } else {
           let youtubeVideosSeries: any[] = [];
           const searchPromises = [
