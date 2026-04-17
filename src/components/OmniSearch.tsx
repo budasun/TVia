@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Sparkles, Film, Microscope, Music, Podcast, Clock, Calendar, ChevronDown, Drama, Clapperboard, Palette, GraduationCap, Tv, UtensilsCrossed, BookOpen, Newspaper } from 'lucide-react';
+import { Search, Sparkles, Film, Microscope, Music, Podcast, Clock, Calendar, ChevronDown, Drama, Clapperboard, Palette, GraduationCap, Tv, UtensilsCrossed, BookOpen, Newspaper, Sun, Moon } from 'lucide-react';
 import type { CategoryFilter, DurationFilter, UploadDateFilter, SearchFilters } from '@/types';
 
 interface OmniSearchProps {
@@ -58,6 +58,27 @@ export default function OmniSearch({
   });
   const [showDurationDropdown, setShowDurationDropdown] = useState(false);
   const [showDateDropdown, setShowDateDropdown] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      setIsDarkMode(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
   // FUNCIÓN PRINCIPAL: Previene la recarga de la página
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,7 +105,21 @@ export default function OmniSearch({
       {/* FORMULARIO DE BÚSQUEDA - Separado del resto */}
       <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto relative">
         <div className="relative flex items-center">
-          <div className="absolute left-4 z-10">
+          {/* Botón de tema - antes del search */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="absolute left-2 z-10 p-2 border-2 border-zinc-900 bg-yellow-400 hover:bg-yellow-300 transition-all"
+            aria-label="Cambiar modo"
+          >
+            {isDarkMode ? (
+              <Moon className="w-4 h-4 text-zinc-900" />
+            ) : (
+              <Sun className="w-4 h-4 text-zinc-900" />
+            )}
+          </button>
+          
+          <div className="absolute left-12 z-10">
             <Search className="w-5 h-5 text-zinc-400" />
           </div>
           
@@ -93,7 +128,7 @@ export default function OmniSearch({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Busca documentales, ciencia, ópera, tutoriales..."
-            className="w-full bg-white border-2 border-zinc-900 pl-12 pr-28 py-3.5 text-base font-medium text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:shadow-[4px_4px_0px_#00ffff] transition-shadow"
+            className="w-full bg-white dark:bg-zinc-900 border-2 border-zinc-900 pl-28 pr-28 py-3.5 text-base font-medium text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:shadow-[4px_4px_0px_#00ffff] transition-shadow"
           />
           
           <button 
@@ -209,7 +244,7 @@ export default function OmniSearch({
         </div>
 
         {/* Separador */}
-        <div className="h-6 w-0.5 bg-zinc-300 hidden sm:block" />
+        <div className="h-6 w-0.5 bg-zinc-300 dark:bg-zinc-600 hidden sm:block" />
 
         {/* Botones de Categorías */}
         <div className="flex flex-wrap justify-center gap-2">
@@ -228,7 +263,7 @@ export default function OmniSearch({
                 className={`flex items-center gap-1.5 px-3 py-1.5 border-2 border-zinc-900 text-xs font-bold transition-all ${
                   isSelected
                     ? 'bg-zinc-900 text-cyan-400 shadow-[4px_4px_0px_#00ffff]'
-                    : 'bg-white text-zinc-900 hover:shadow-[3px_3px_0px_#00ffff] hover:-translate-y-0.5'
+                    : 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white hover:shadow-[3px_3px_0px_#00ffff] hover:-translate-y-0.5'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />

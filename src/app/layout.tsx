@@ -63,7 +63,18 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="format-detection" content="telephone=no" />
       </head>
-      <body className={`${inter.variable} font-sans antialiased bg-white text-zinc-900`}>
+      <body className={`${inter.variable} font-sans antialiased bg-zinc-900 text-white`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+              } else {
+                document.documentElement.classList.add('dark');
+              }
+            `,
+          }}
+        />
         {children}
       </body>
     </html>
