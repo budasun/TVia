@@ -211,8 +211,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
-      <header className="pt-20 pb-12 px-6 bg-white dark:bg-zinc-900 border-b-2 border-zinc-900 flex flex-col items-center transition-colors">
+    <div className="min-h-screen text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
+      <header className="pt-20 pb-12 px-6 border-b-2 border-zinc-900 flex flex-col items-center transition-colors">
         <div className="w-full max-w-7xl mx-auto flex flex-col items-center text-center">
             <motion.h1 
             className="font-black uppercase tracking-tight leading-none mb-6 flex items-baseline justify-center"
@@ -237,7 +237,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="px-6 pb-[150px] lg:pb-16 bg-white dark:bg-zinc-950 transition-colors">
+      <main className="px-6 pb-[150px] lg:pb-16 transition-colors">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-6 mt-8">
             <h2 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tight border-l-4 border-[#D946EF] pl-4">
