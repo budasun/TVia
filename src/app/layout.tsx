@@ -63,7 +63,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="format-detection" content="telephone=no" />
       </head>
-      <body className={`${inter.variable} font-sans antialiased bg-zinc-900 text-white`}>
+      <body className={`${inter.variable} font-sans antialiased transition-colors duration-300`}>
         <script
           dangerouslySetInnerHTML={{
             __html: `

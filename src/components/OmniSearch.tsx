@@ -80,7 +80,6 @@ export default function OmniSearch({
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
-  // FUNCIÓN PRINCIPAL: Previene la recarga de la página
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -102,24 +101,24 @@ export default function OmniSearch({
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      {/* FORMULARIO DE BÚSQUEDA - Separado del resto */}
-      <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto relative">
-        <div className="relative flex items-center">
-          {/* Botón de tema - antes del search */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="absolute left-2 z-10 p-2 border-2 border-zinc-900 bg-yellow-400 hover:bg-yellow-300 transition-all"
-            aria-label="Cambiar modo"
-          >
-            {isDarkMode ? (
-              <Moon className="w-4 h-4 text-zinc-900" />
-            ) : (
-              <Sun className="w-4 h-4 text-zinc-900" />
-            )}
-          </button>
-          
-          <div className="absolute left-12 z-10">
+      {/* FORMULARIO DE BÚSQUEDA */}
+      <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto flex items-center gap-3">
+        {/* Botón de tema - a la izquierda del input */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="flex-shrink-0 p-3 border-2 border-zinc-900 bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-300 dark:hover:bg-yellow-400 transition-all shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_rgba(0,255,255,0.5)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none z-20"
+          aria-label="Cambiar modo"
+        >
+          {isDarkMode ? (
+            <Moon className="w-5 h-5 text-zinc-900" />
+          ) : (
+            <Sun className="w-5 h-5 text-zinc-900" />
+          )}
+        </button>
+
+        <div className="relative flex-1 flex items-center">
+          <div className="absolute left-4 z-10">
             <Search className="w-5 h-5 text-zinc-400" />
           </div>
           
@@ -128,7 +127,7 @@ export default function OmniSearch({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Busca documentales, ciencia, ópera, tutoriales..."
-            className="w-full bg-white dark:bg-zinc-900 border-2 border-zinc-900 pl-28 pr-28 py-3.5 text-base font-medium text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:shadow-[4px_4px_0px_#00ffff] transition-shadow"
+            className="w-full bg-white dark:bg-zinc-900 border-2 border-zinc-900 pl-12 pr-32 py-3.5 text-base font-medium text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:shadow-[4px_4px_0px_#00ffff] transition-shadow"
           />
           
           <button 
@@ -141,7 +140,7 @@ export default function OmniSearch({
         </div>
       </form>
 
-      {/* FILTROS Y CATEGORÍAS - FUERA DEL FORM */}
+      {/* FILTROS Y CATEGORÍAS */}
       <div className="flex flex-wrap justify-center items-center gap-2">
         {/* Dropdown Duración */}
         <div className="relative">
@@ -155,7 +154,7 @@ export default function OmniSearch({
             className={`flex items-center gap-2 px-3 py-1.5 border-2 border-zinc-900 text-xs font-bold transition-all ${
               filters.duration !== 'any'
                 ? 'bg-cyan-400 text-zinc-900 shadow-[2px_2px_0px_#00ffff]'
-                : 'bg-white text-zinc-900 hover:shadow-[3px_3px_0px_#00ffff]'
+                : 'bg-white dark:bg-zinc-800 dark:text-white text-zinc-900 hover:shadow-[3px_3px_0px_#00ffff]'
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
@@ -169,7 +168,7 @@ export default function OmniSearch({
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute top-full left-0 mt-2 w-44 bg-white border-2 border-zinc-900 overflow-hidden z-50"
+                className="absolute top-full left-0 mt-2 w-44 bg-white dark:bg-zinc-900 border-2 border-zinc-900 overflow-hidden z-50"
               >
                 {durationOptions.map((option) => (
                   <button
@@ -182,7 +181,7 @@ export default function OmniSearch({
                     className={`w-full px-3 py-2 text-left text-xs font-medium transition-colors ${
                       filters.duration === option.id
                         ? 'bg-cyan-400 text-zinc-900'
-                        : 'text-zinc-700 hover:bg-zinc-100'
+                        : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                     }`}
                   >
                     {option.label}
@@ -205,7 +204,7 @@ export default function OmniSearch({
             className={`flex items-center gap-2 px-3 py-1.5 border-2 border-zinc-900 text-xs font-bold transition-all ${
               filters.uploadDate !== 'any'
                 ? 'bg-fuchsia-400 text-zinc-900 shadow-[2px_2px_0px_#ff00ff]'
-                : 'bg-white text-zinc-900 hover:shadow-[3px_3px_0px_#ff00ff]'
+                : 'bg-white dark:bg-zinc-800 dark:text-white text-zinc-900 hover:shadow-[3px_3px_0px_#ff00ff]'
             }`}
           >
             <Calendar className="w-3.5 h-3.5" />
@@ -219,7 +218,7 @@ export default function OmniSearch({
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute top-full left-0 mt-2 w-44 bg-white border-2 border-zinc-900 overflow-hidden z-50"
+                className="absolute top-full left-0 mt-2 w-44 bg-white dark:bg-zinc-900 border-2 border-zinc-900 overflow-hidden z-50"
               >
                 {uploadDateOptions.map((option) => (
                   <button
@@ -232,7 +231,7 @@ export default function OmniSearch({
                     className={`w-full px-3 py-2 text-left text-xs font-medium transition-colors ${
                       filters.uploadDate === option.id
                         ? 'bg-fuchsia-400 text-zinc-900'
-                        : 'text-zinc-700 hover:bg-zinc-100'
+                        : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                     }`}
                   >
                     {option.label}
@@ -262,7 +261,7 @@ export default function OmniSearch({
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border-2 border-zinc-900 text-xs font-bold transition-all ${
                   isSelected
-                    ? 'bg-zinc-900 text-cyan-400 shadow-[4px_4px_0px_#00ffff]'
+                    ? 'bg-zinc-900 dark:bg-zinc-700 text-cyan-400 shadow-[4px_4px_0px_#00ffff]'
                     : 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white hover:shadow-[3px_3px_0px_#00ffff] hover:-translate-y-0.5'
                 }`}
               >

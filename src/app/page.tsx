@@ -211,8 +211,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 font-sans">
-      <header className="pt-20 pb-12 px-6 bg-white border-b-2 border-zinc-900 flex flex-col items-center">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
+      <header className="pt-20 pb-12 px-6 bg-white dark:bg-zinc-900 border-b-2 border-zinc-900 flex flex-col items-center transition-colors">
         <div className="w-full max-w-7xl mx-auto flex flex-col items-center text-center">
             <motion.h1 
             className="font-black uppercase tracking-tight leading-none mb-6 flex items-baseline justify-center"
@@ -223,7 +223,7 @@ export default function Home() {
             <span className="text-[#22D3EE] text-5xl md:text-7xl drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]" style={{ WebkitTextStroke: '1px black' }}>Video </span>
             <span className="text-[#D946EF] text-4xl md:text-6xl drop-shadow-[0_0_25px_rgba(217,70,239,0.7)]" style={{ WebkitTextStroke: '1px black' }}>IA</span>
           </motion.h1>
-          <p className="text-zinc-900 text-xl md:text-2xl font-medium max-w-2xl text-center">
+          <p className="text-zinc-900 dark:text-zinc-300 text-xl md:text-2xl font-medium max-w-2xl text-center">
             Tu plataforma de streaming educativo. Videos de calidad para aprender y disfrutar.
           </p>
           <div className="w-full">
@@ -237,10 +237,10 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="px-6 pb-[150px] lg:pb-16 bg-white">
+      <main className="px-6 pb-[150px] lg:pb-16 bg-white dark:bg-zinc-950 transition-colors">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-6 mt-8">
-            <h2 className="text-2xl font-black text-zinc-900 uppercase tracking-tight border-l-4 border-[#D946EF] pl-4">
+            <h2 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tight border-l-4 border-[#D946EF] pl-4">
               {CATEGORY_TITLES[selectedCategory]}
             </h2>
             {searchResults.length > 0 && (
@@ -282,7 +282,7 @@ export default function Home() {
                   {isLoadingMore ? (
                     <div className="flex items-center gap-3 py-4">
                       <div className="w-6 h-6 border-4 border-zinc-200 border-t-[#D946EF] rounded-full animate-spin" />
-                      <span className="text-zinc-900 font-bold uppercase text-sm">Cargando mas videos...</span>
+                      <span className="text-zinc-900 dark:text-zinc-300 font-bold uppercase text-sm">Cargando mas videos...</span>
                     </div>
                   ) : hasMore ? (
                     <motion.button
@@ -300,7 +300,7 @@ export default function Home() {
               </motion.div>
             ) : (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-                <div className="bg-white border-2 border-zinc-900 p-8 max-w-md mx-auto shadow-[4px_4px_0px_#D946EF]">
+                <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-900 p-8 max-w-md mx-auto shadow-[4px_4px_0px_#D946EF]">
                   <p className="text-zinc-600 font-medium">
                     No se encontraron resultados. Intenta con otra busqueda.
                   </p>
