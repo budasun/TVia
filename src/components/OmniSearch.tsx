@@ -140,7 +140,7 @@ export default function OmniSearch({
         </div>
       </form>
 
-      {/* FILTROS Y CATEGORÍAS */}
+      {/* FILTROS Y CATEGORÍAS - Todo en una sola línea */}
       <div className="flex flex-wrap justify-center items-center gap-2">
         {/* Dropdown Duración */}
         <div className="relative">
@@ -242,8 +242,8 @@ export default function OmniSearch({
           </AnimatePresence>
         </div>
 
-        {/* Separador */}
-        <div className="h-6 w-0.5 bg-zinc-300 dark:bg-zinc-600 hidden sm:block" />
+        {/* Separador - visible siempre */}
+        <div className="h-6 w-0.5 bg-zinc-300 dark:bg-zinc-600" />
 
         {/* Botones de Categorías */}
         <div className="flex flex-wrap justify-center gap-2">
