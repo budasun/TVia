@@ -771,13 +771,31 @@ export async function GET(request: Request) {
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
           console.log(`💾 Guardado TODO (mezclado): ${allVideos.length} videos`);
         } else {
+          const CATEGORY_SEARCH_TERMS: Record<string, string[]> = {
+            pelicula: ['pelicula', 'movie', 'cine', 'film'],
+            documental: ['documental', 'documentary'],
+            ciencia: ['ciencia', 'science', 'cientifico'],
+            recetas: ['receta', 'cocina', 'comida', 'chef', 'gastronomia'],
+            tutorial: ['tutorial', 'curso', 'how to', 'aprende'],
+            podcast: ['podcast', 'entrevista', 'charla', 'conversacion'],
+            noticias: ['noticia', 'news', 'noticiero'],
+            series: ['serie', 'series', 'temporada'],
+            cortometraje: ['cortometraje', 'short film', 'corto'],
+            arte: ['arte', 'art', 'pintura', 'museo'],
+            entretenimiento: ['entretenimiento', 'comedia', 'tv show'],
+            opera: ['opera', 'ópera', 'musical'],
+            concurso: ['concierto', 'concerto', 'festival', 'musica'],
+            all: ['video', 'contenido'],
+          };
+          
           if (query === '') {
             baseStrings = CATEGORY_QUERIES[category];
           } else {
             if (category === 'all') {
               baseStrings = [queryForYoutube, `${queryForYoutube} documental`, `${queryForYoutube} explicado`];
             } else {
-              baseStrings = CATEGORY_QUERIES[category].map(catKw => `${queryForYoutube} ${catKw}`);
+              const catTerms = CATEGORY_SEARCH_TERMS[category] || [category];
+              baseStrings = catTerms.map(catTerm => `${queryForYoutube} ${catTerm}`);
             }
           }
 
@@ -805,8 +823,12 @@ export async function GET(request: Request) {
                 return regex.test(textToSearch);
               });
             });
-            if (strictFiltered.length >= 40) filteredRaw = strictFiltered;
-            else console.log(`⚠️ Filtro muy estricto (${strictFiltered.length} res). Activando Safe Fallback.`);
+            if (strictFiltered.length >= 20) {
+              filteredRaw = strictFiltered;
+              console.log(`🔍 Filtro aplicado: ${strictFiltered.length} resultados`);
+            } else {
+              console.log(`⚠️ Filtro muy estricto (${strictFiltered.length} res). Usando todos ${filteredRaw.length} resultados.`);
+            }
           }
 
           allVideos = filteredRaw.map((v: { id?: string; title?: string; description?: string; thumbnail?: { url?: string }; channel?: { name?: string }; durationFormatted?: string }) => ({
