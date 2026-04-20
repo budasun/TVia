@@ -345,6 +345,7 @@ const SIMPSONS_EPISODES: UnifiedMedia[] = [
 ];
 
 const PELICULAS: UnifiedMedia[] = [
+  { id: 'frankenstein-2025', title: 'Frankenstein (2025)', source: 'embed', url: 'https://barmonrey.com/player/2v8blEHLwfXuxEm/', thumbnail: 'https://sun9-22.userapi.com/s/v1/ig2/MigbnlpJZzHShcYnGRd2CJoNvbt9SqScVv0J28qqvUtMNRc_1wouGB9Bt8xiU91kUYHiqUSCJYiIc7H36_ZsFBfr.jpg?quality=95&as=32x48,48x72,72x108,108x162,160x240,240x360,300x450&from=bu&cs=300x0', description: 'Adaptación cinematográfica de la novela escrita por Mary Shelley en el año 1818. La historia universal cuenta cómo la obsesión de un doctor por revivir a los muertos y darles la vida de manera científica hace que, sorpresivamente, «nazca» el monstruo Frankenstein. Después de indagar y emplear su valioso tiempo en documentarse y estudiar si su plan podría tener buenos resultados, sabe que debe adquirir miembros del cuerpo de muertos. Con la forma de humano ya en su mesa de laboratorio y un rayo eléctrico, el doctor Viktor Frankenstein consegue el éxito que esperaba: un ser creado a partir de partes de cadáveres que tendrá que lidar con la vuelta a la vida y vagar sin saber quién es ni cuál es su identidad. Siendo marginado por la sociedad por su apariencia.', category: 'pelicula', tags: ['frankenstein', 'terror', 'drama', 'ficción', 'monstruo', 'mary shelley'], author: 'Pelis182', duration: '' },
   { id: 'mira-como-corren-2022', title: 'Mira cómo corren (2022)', source: 'embed', url: 'https://barmonrey.com/player/awB8GxvyF17YUmW/', thumbnail: 'https://sun9-14.userapi.com/impg/gC3WwK0hie91JbZgudvYybSv8w6WZRoNjh3Jiw/KtHGZWSwqog.jpg?size=300x450&quality=95&sign=72ccdd0d67039fc195ed3caa8d61fb1e&type=album', description: 'Ambientada en el West End del Londres de los años 50, los planes para una versión cinematográfica de una exitosa obra de teatro se ven interrumpidos bruscamente tras el asesinato de un director de cine de Hollywood. Cuando el inspector Stoppard y la entusiasta recién llegada agente Stalker se hacen cargo del caso, ambos se ven envueltos en un intrigante misterio dentro del glamuroso y decadente teatro clandestino, investigando el crimen por su cuenta y riesgo.', category: 'pelicula', tags: ['mira', 'corren', 'comedia', 'misterio', 'thriller'], author: 'Pelis182', duration: '' },
   { id: 'peso-del-talento-2022', title: 'El peso del talento (2022)', source: 'embed', url: 'https://barmonrey.com/player/gf9kH4r8CcI33Rk/', thumbnail: 'https://sun9-16.userapi.com/s/v1/if2/HBmU_B2tHDdMem3tZ7Sxepyr97urx8XO_12Gtmvjmo5fuHb4r-yqDwYMw8_5wWuB3XGtwvBw18wIdx16env55vE8.jpg?size=300x450&quality=95&type=album', description: 'Frustrado creativamente y con problemas de dinero, Nicolas Cage decide aceptar un millón de dólares, a cambio de assister a la fiesta de cumpleaños de un súper fan que dice ser el más fan de todos los fans: Javi. Sin embargo, las cosas dan un giro inesperado cuando Cage es reclutado por la CIA, ya que el fan multimillonario es un capo de la droga y fue elegido para una película de Tarantino. Obligándolo a reencarnar sus personajes más icónicos y amados, con tal de salvarse a sí mismo y a los suyos de este complicado enredo.', category: 'pelicula', tags: ['peso', 'talento', 'nicolas cage', 'acción', 'comedia'], author: 'Pelis182', duration: '' },
   { id: 'lobo-wall-street-2013', title: 'El lobo de Wall Street (2013)', source: 'embed', url: 'https://barmonrey.com/player/OEvwHyF6GGFXvTS/', thumbnail: 'https://sun9-17.userapi.com/impg/HfJJCTPJk5uFnkoXkiSrjFyRH_r6VtWjJkc4xw/otX7I8omybo.jpg?size=300x450&quality=95&sign=92ddbe1ff81c514375e04b4f47bc841c&type=album', description: 'Jordan Belfort es muy joven, apenas tiene 24 años, pero también es muy ambicioso. Su afán por hacer dinero le lleva a convertirse en un bróker destacado de Wall Street y directivo de la empresa de inversiones bursátiles Stratton Oakmont, disposto a todo para enriquecerse. Corren los años 90 y en el parqué de Nueva York casi todo vale. A costa de traficar con bonos basura y de estafar a numerosos inversores, Belfort se convierte pronto en una máquina de hacer dinero, y también de gastarlo. En un día podrá engordar sus cuentas con millones de dólares y gastarlos por la noche a la misma velocidad. El juego sucio que lleva en la bolsa lo aplica también en su vida extra profesional.', category: 'pelicula', tags: ['lobo', 'wall street', 'drama', 'comedia', 'crimen'], author: 'Pelis182', duration: '180 min' },
@@ -379,6 +380,21 @@ const CATEGORY_QUERIES: Record<string, string[]> = {
   entretenimiento: ['los simpsons capitulo completo', 'the simpsons full episode', 'simpsons serie completa', 'futurama capitulos', 'padre de familia español'],
   concierto: ['concierto completo', 'live concert', 'concierto en vivo', 'classical music concert', 'symphony orchestra', 'rock concert', 'festival música'],
   recetas: ['recetas de cocina', 'cocina mexicana', 'cocina italiana', 'cocina japonesa', 'cocina tailandesa', 'cocina arabe', 'recetas vegetarianas', 'comida fitness', 'cocina Nicaraguense', 'cocina Hondureña', 'cocina Costarricense', 'cocina Argentina', 'cocina Brasileña', 'cocina Colombiana', 'cocina Chilena', 'cocina Peruana'],
+};
+
+const CATEGORY_SEARCH_TERMS: Record<string, string[]> = {
+  pelicula: ['movie', 'pelicula', 'film'],
+  documental: ['documentary', 'documental'],
+  cortometraje: ['short film', 'cortometraje'],
+  entretenimiento: ['tv show', 'serie', 'episode'],
+  ciencia: ['science', 'ciencia'],
+  tutorial: ['tutorial', 'how to', 'curso'],
+  podcast: ['podcast', 'entrevista'],
+  opera: ['opera', 'ópera'],
+  conferencias: ['talk', 'conference', 'conferencia'],
+  arte: ['art', 'arte', 'museum'],
+  musica: ['music', 'musica', 'concierto'],
+  recetas: ['recipe', 'receta', 'cocina', 'cooking'],
 };
 
 const BEBE_RENO_EPISODES: UnifiedMedia[] = [
