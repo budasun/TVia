@@ -92,6 +92,7 @@ export default function Home() {
       if (pageToken) params.set('pageToken', pageToken);
       if (category === 'series' && !pageToken) params.set('refresh', 'true');
       if (category === 'entretenimiento' && !pageToken) params.set('refresh', 'true');
+      if (category === 'tutorial' && !pageToken) params.set('refresh', 'true');
       
       console.log('Buscando:', params.toString());
       

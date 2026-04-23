@@ -846,6 +846,12 @@ export async function GET(request: Request) {
           console.error('Error en noticias:', newsError);
           allVideos = [];
         }
+      } else if (category === 'tutorial') {
+        searchCache.delete(cacheKey);
+        console.log('📚 Cargando Tutoriales...');
+        allVideos = [...TUTORIALES];
+        searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+        console.log(`💾 Guardado Tutoriales: ${allVideos.length} videos`);
       } else {
         console.log('🕵️ Iniciando Deep Matrix Scraping para:', cacheKey);
         const normQuery = query.toLowerCase();
@@ -969,7 +975,6 @@ export async function GET(request: Request) {
         }));
 
         if (category === 'pelicula' && query === '') allVideos = [...PELICULAS, ...allVideos];
-        if (category === 'tutorial' && query === '') allVideos = [...TUTORIALES, ...allVideos];
         searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
         console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
       }
