@@ -698,9 +698,9 @@ export async function GET(request: Request) {
         }
       } else if (category === 'series') {
         searchCache.delete(cacheKey);
-        console.log('🎬 Cargando Series - Breaking Bad + Bebé Reno + Better Call Saul + One Piece...');
-        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('los anillos') || query.toLowerCase().includes('anillos de poder') || query.toLowerCase().includes('rings of power') || query.toLowerCase().includes('mandalorian')) {
-          allVideos = [...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LOTR_ANILLOS_EPISODES, ...MANDALORIAN];
+        console.log('🎬 Cargando Series - Breaking Bad + Bebé Reno + Better Call Saul + One Piece + Mandalorian...');
+        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('mandalorian')) {
+          allVideos = [...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...MANDALORIAN];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
           console.log(`💾 Guardado Series: ${allVideos.length} episodios`);
         } else {
