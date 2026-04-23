@@ -1,4 +1,4 @@
-export type MediaSource = 'youtube' | 'vimeo' | 'ted' | 'archive' | 'mega' | 'embed';
+export type MediaSource = 'youtube' | 'vimeo' | 'ted' | 'archive' | 'mega' | 'embed' | 'drive';
 
 export type MediaCategory = 
   | 'documental' 

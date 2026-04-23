@@ -294,6 +294,11 @@ export default function SmartPlayer({
       return `https://ok.ru/videoembed/${okRuId}?autoplay=1&nochat=1`;
     }
 
+    const driveEmbed = getDriveEmbedUrl(media.url);
+    if (driveEmbed) {
+      return driveEmbed;
+    }
+
     return null;
   }, [media?.url]);
 
@@ -736,24 +741,22 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
                 </>
               ) : media?.url?.includes('drive.google.com') ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-800 z-20">
-                  <div className="text-center p-8 max-w-md">
-                    <div className="w-20 h-20 mx-auto mb-4 bg-red-600 rounded-full flex items-center justify-center">
-                      <Play className="w-10 h-10 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">Video de Google Drive</h3>
-                    <p className="text-zinc-400 mb-6 text-sm">
-                      Este video no puede reproducirse en línea debido a restricciones de Google Drive.
-                    </p>
-                    <a
-                      href={media.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-bold border-2 border-white transition-colors"
-                    >
-                      <Play className="w-5 h-5" />
-                      Abrir en Google Drive
-                    </a>
-                  </div>
+                  <iframe
+                    src={embedUrl || media.url}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    style={{ border: 0 }}
+                  />
+                  <a
+                    href={media.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute bottom-4 right-4 inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold border-2 border-white transition-colors"
+                  >
+                    <Play className="w-4 h-4" />
+                    Abrir en nueva pestaña
+                  </a>
                 </div>
               ) : media?.url?.includes('ok.ru') || getOkRuId(media?.url || '') ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-800 z-20">
