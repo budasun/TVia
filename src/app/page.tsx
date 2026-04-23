@@ -91,6 +91,7 @@ export default function Home() {
       if (filters.uploadDate !== 'any') params.set('uploadDate', filters.uploadDate);
       if (pageToken) params.set('pageToken', pageToken);
       if (category === 'series' && !pageToken) params.set('refresh', 'true');
+      if (category === 'entretenimiento' && !pageToken) params.set('refresh', 'true');
       
       console.log('Buscando:', params.toString());
       
