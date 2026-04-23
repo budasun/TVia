@@ -90,6 +90,7 @@ export default function Home() {
       if (filters.duration !== 'any') params.set('duration', filters.duration);
       if (filters.uploadDate !== 'any') params.set('uploadDate', filters.uploadDate);
       if (pageToken) params.set('pageToken', pageToken);
+      if (category === 'series' && !pageToken) params.set('refresh', 'true');
       
       console.log('Buscando:', params.toString());
       
