@@ -982,6 +982,7 @@ export async function GET(request: Request) {
 
     const durationFilter = searchParams.get('duration');
       allVideos = allVideos.filter(v => {
+        if (v.source === 'folder') return true;
         if (!v.duration) return false;
         const parts = v.duration.split(':').map(Number);
         let minutes = parts.length === 3 ? (parts[0] * 60) + parts[1] : parts.length === 2 ? parts[0] : 0;
