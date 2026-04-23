@@ -685,11 +685,16 @@ export async function GET(request: Request) {
         console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
       } else if (category === 'series') {
         searchCache.delete(cacheKey);
-        console.log('🎬 Cargando Series - Bebé Reno + Better Call Saul + One Piece...');
-        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno')) {
-          allVideos = [...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES];
+        console.log('🎬 Cargando Series - Breaking Bad + Bebé Reno + Better Call Saul + One Piece...');
+        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad')) {
+          allVideos = [
+            ...BREAKINGBAD_EPISODES.filter(ep => ep.source !== 'folder'),
+            ...BEBE_RENO_EPISODES,
+            ...BETTER_CALL_SAUL_EPISODES,
+            ...ONE_PIECE_EPISODES,
+          ];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
-          console.log(`💾 Guardado Series: ${allVideos.length} episodios (Bebé Reno + Better Call Saul + One Piece)`);
+          console.log(`💾 Guardado Series: ${allVideos.length} episodios`);
         } else {
           let youtubeVideosSeries: any[] = [];
           const searchPromises = [
