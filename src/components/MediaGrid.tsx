@@ -60,9 +60,9 @@ function formatDate(dateString: string | Date | undefined): string {
 }
 
 function extractSeasonId(mediaId: string): string | null {
-  const match = mediaId.match(/^(breakingbad|simpsons|bettercallsaul|onepiece|blackmirror|bebereno|futurama)-t(\d+)$/i);
+  const match = mediaId.toLowerCase().match(/^(breakingbad|simpsons|bettercallsaul|onepiece|blackmirror|bebereno|futurama)-t(\d+)$/);
   if (match) {
-    const series = match[1].toLowerCase();
+    const series = match[1];
     const seasonNum = parseInt(match[2], 10);
     return `${series}-t${seasonNum}`;
   }
@@ -70,15 +70,16 @@ function extractSeasonId(mediaId: string): string | null {
 }
 
 function extractSeasonFromEpisode(mediaId: string): string | null {
-  let match = mediaId.match(/^(breakingbad|simpsons)-(\d+)x(\d+)$/i);
+  const lowerId = mediaId.toLowerCase();
+  let match = lowerId.match(/^(breakingbad|simpsons)-(\d+)x(\d+)$/);
   if (match) {
-    const series = match[1].toLowerCase();
+    const series = match[1];
     const seasonNum = parseInt(match[2], 10);
     return `${series}-t${seasonNum}`;
   }
-  match = mediaId.match(/^(bettercallsaul|onepiece|blackmirror|bebereno|futurama)-t(\d+)x(\d+)$/i);
+  match = lowerId.match(/^(bettercallsaul|onepiece|blackmirror|bebereno|futurama)-t(\d+)x(\d+)$/);
   if (match) {
-    const series = match[1].toLowerCase();
+    const series = match[1];
     const seasonNum = parseInt(match[2], 10);
     return `${series}-t${seasonNum}`;
   }
@@ -203,10 +204,18 @@ export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
     return matchingEpisodes;
   };
 
-  const folderItems = folders.map(folder => ({
+const folderItems = folders.map(folder => ({
     folder,
     episodes: getEpisodesForFolder(folder.id)
   }));
+
+  const episodeIdsInFolders = new Set(
+    folderItems.flatMap(({ episodes }) => episodes.map(ep => ep.id))
+  );
+
+  const looseEpisodes = media.filter(
+    (item) => item.source !== 'folder' && !episodeIdsInFolders.has(item.id)
+  );
 
   return (
     <div className="space-y-6">
@@ -251,13 +260,13 @@ export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
         </div>
       ))}
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {media
-          .filter((item) => item.source !== 'folder')
-          .map((item) => (
+      {looseEpisodes.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {looseEpisodes.map((item) => (
             <MediaCard key={item.id} item={item} onSelectMedia={onSelectMedia} />
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
