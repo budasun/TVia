@@ -18,7 +18,8 @@ import {
   Play,
   Download,
   MessageSquare,
-  MessageSquareOff
+  MessageSquareOff,
+  ExternalLink
 } from 'lucide-react';
 import type { UnifiedMedia, ChatMessage, TutorResponse } from '@/types';
 
@@ -752,10 +753,10 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
                     href={media.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="absolute top-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold border-2 border-white transition-colors z-30"
+                    className="absolute top-4 left-4 p-2 bg-transparent hover:bg-zinc-800/50 text-zinc-500 hover:text-zinc-300 transition-colors z-30 rounded"
+                    title="Abrir en Drive"
                   >
-                    <Play className="w-4 h-4" />
-                    Abrir en nueva pestaña
+                    <ExternalLink className="w-5 h-5" />
                   </a>
                 </div>
               ) : media?.url?.includes('ok.ru') || getOkRuId(media?.url || '') ? (
