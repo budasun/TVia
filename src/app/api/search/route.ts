@@ -679,70 +679,7 @@ export async function GET(request: Request) {
         console.log(`🔄 Force refresh para "${cacheKey}"`);
       }
 
-      if (category === 'entretenimiento') {
-        console.log('🕵️ Mezclando Blogger y YouTube Extendido para Entretenimiento...');
-        let youtubeVideos: any[] = [];
-
-        if (query === '') {
-          const entertainmentQueries = [
-            'capítulos completos los simpsons latino',
-            'capítulos completos futurama latino',
-            'capítulos completos padre de familia latino',
-            'capítulos completos daria latino',
-            'capítulos completos south park latino',
-            'capítulos completos la casa de los dibujos latino',
-            'capítulos completos malcolm el de en medio latino',
-            'capítulos completos rick and morty latino'
-          ];
-          console.log(`🚀 Lanzando ${entertainmentQueries.length} hilos de búsqueda para Entretenimiento...`);
-          const searchPromises = entertainmentQueries.map(q => YouTube.search(q, { limit: 30, type: "video" }).catch(() => []));
-          const resultsMatrix = await Promise.all(searchPromises);
-          const rawResults = resultsMatrix.flat();
-          const uniqueMap = new Map();
-          rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
-          youtubeVideos = Array.from(uniqueMap.values());
-        } else {
-          const searchPromises = [
-            YouTube.search(query, { limit: 40, type: "video" }).catch(() => []),
-            YouTube.search(`${query} latino`, { limit: 40, type: "video" }).catch(() => [])
-          ];
-          const resultsMatrix = await Promise.all(searchPromises);
-          const rawResults = resultsMatrix.flat();
-          const uniqueMap = new Map();
-          rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
-          youtubeVideos = Array.from(uniqueMap.values());
-        }
-
-        youtubeVideos = youtubeVideos.filter((v: any) => {
-          const channelName = (v.channel?.name || '').toLowerCase();
-          const title = (v.title || '').toLowerCase();
-          const blockedKeywords = ['reaccion', 'reacción'];
-          const blockedChannels = ['reichanneltvv', 'loren reacciona', 'luigi primetv', 'some lopez', 'kira', 'kiradad', 'maria perez'];
-          const hasBlockedKeyword = blockedKeywords.some(kw => channelName.includes(kw) || title.includes(kw));
-          const isBlockedChannel = blockedChannels.some(ch => channelName.includes(ch));
-          return !hasBlockedKeyword && !isBlockedChannel;
-        });
-
-        youtubeVideos = youtubeVideos.map((v: any) => ({
-          id: v.id || '',
-          title: v.title || '',
-          source: 'youtube' as const,
-          url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
-          thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
-          description: v.description || `Video de ${v.channel?.name || 'YouTube'}`,
-          duration: v.durationFormatted || '',
-          author: v.channel?.name || 'Desconocido',
-          category: 'series',
-          tags: [],
-          createdAt: new Date(),
-          publishedAt: new Date().toISOString(),
-          durationSeconds: 0,
-        }));
-
-        allVideos = query === '' ? [...SIMPSONS_EPISODES, ...youtubeVideos] : youtubeVideos;
-        searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
-        console.log(`💾 Guardado Entretenimiento Híbrido Expandido: ${allVideos.length} videos totales`);
-      } else if (category === 'series') {
+      if (category === 'series') {
         searchCache.delete(cacheKey);
         console.log('🎬 Cargando Series - Breaking Bad + Bebé Reno + Better Call Saul + One Piece...');
         if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('los anillos') || query.toLowerCase().includes('anillos de poder') || query.toLowerCase().includes('rings of power') || query.toLowerCase().includes('simpsons') || query.toLowerCase().includes('mandalorian')) {
@@ -1014,12 +951,10 @@ export async function GET(request: Request) {
         if (category === 'pelicula' && query === '') allVideos = [...PELICULAS, ...allVideos];
         searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
         console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
-        }
       }
     }
 
     const durationFilter = searchParams.get('duration');
-    if (durationFilter && durationFilter !== 'any') {
       allVideos = allVideos.filter(v => {
         if (!v.duration) return false;
         const parts = v.duration.split(':').map(Number);
