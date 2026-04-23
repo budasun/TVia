@@ -848,10 +848,41 @@ export async function GET(request: Request) {
         }
       } else if (category === 'tutorial') {
         searchCache.delete(cacheKey);
-        console.log('📚 Cargando Tutoriales...');
-        allVideos = [...TUTORIALES];
-        searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
-        console.log(`💾 Guardado Tutoriales: ${allVideos.length} videos`);
+        console.log('📚 Cargando Tutoriales con Automasaje + YouTube...');
+        
+        if (query === '') {
+          allVideos = [...TUTORIALES];
+          searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+          console.log(`💾 Guardado Tutoriales: ${allVideos.length} videos`);
+        } else {
+          const tutorialQueries = ['tutorial', 'curso', 'how to', 'aprende', 'enseña'];
+          const searchPromises = tutorialQueries.map(q => YouTube.search(q, { limit: 15, type: "video" }).catch(() => []));
+          const resultsMatrix = await Promise.all(searchPromises);
+          const rawResults = resultsMatrix.flat().flat();
+          
+          const uniqueMap = new Map();
+          rawResults.forEach((v: { id?: string }) => { if (v.id && !uniqueMap.has(v.id)) uniqueMap.set(v.id, v); });
+          
+          let youtubeVideos = Array.from(uniqueMap.values()).map((v: any) => ({
+            id: v.id || '',
+            title: v.title || '',
+            source: 'youtube' as const,
+            url: v.id ? `https://www.youtube.com/watch?v=${v.id}` : '',
+            thumbnail: v.thumbnail?.url || (v.id ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : ''),
+            description: v.description || `Tutorial de ${v.channel?.name || 'YouTube'}`,
+            duration: v.durationFormatted || '',
+            author: v.channel?.name || 'Desconocido',
+category: 'tutorial' as MediaCategory,
+            tags: [],
+            createdAt: new Date(),
+            publishedAt: new Date().toISOString(),
+            durationSeconds: 0,
+          }));
+          
+          allVideos = [...TUTORIALES, ...youtubeVideos];
+          searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+          console.log(`💾 Guardado Tutoriales: ${allVideos.length} videos`);
+        }
       } else {
         console.log('🕵️ Iniciando Deep Matrix Scraping para:', cacheKey);
         const normQuery = query.toLowerCase();
