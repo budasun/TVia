@@ -60,7 +60,7 @@ function formatDate(dateString: string | Date | undefined): string {
 }
 
 function extractSeasonId(mediaId: string): string | null {
-  const match = mediaId.toLowerCase().match(/^(breakingbad|simpsons|bettercallsaul|onepiece|blackmirror|bebereno|futurama|lotr)-t(\d+)$/);
+  const match = mediaId.toLowerCase().match(/^(breakingbad|simpsons|bettercallsaul|onepiece|blackmirror|bebereno|futurama|lotr|mandalorian)-t(\d+)$/);
   if (match) {
     const series = match[1];
     const seasonNum = parseInt(match[2], 10);
@@ -78,6 +78,12 @@ function extractSeasonFromEpisode(mediaId: string): string | null {
     return `${series}-t${seasonNum}`;
   }
   match = lowerId.match(/^(bettercallsaul|onepiece|blackmirror|bebereno)-t(\d+)x(\d+)$/);
+  if (match) {
+    const series = match[1];
+    const seasonNum = parseInt(match[2], 10);
+    return `${series}-t${seasonNum}`;
+  }
+  match = lowerId.match(/^(breakingbad|simpsons|futurama|lotr|mandalorian)-t(\d+)x(\d+)$/);
   if (match) {
     const series = match[1];
     const seasonNum = parseInt(match[2], 10);
