@@ -61,13 +61,27 @@ function formatDate(dateString: string | Date | undefined): string {
 
 function extractSeasonId(mediaId: string): string | null {
   const match = mediaId.match(/^(breakingbad|simpsons|bettercallsaul|onepiece|blackmirror|bebereno|futurama)-t(\d+)$/i);
-  if (match) return match[1].toLowerCase() + '-t' + match[2];
+  if (match) {
+    const series = match[1].toLowerCase();
+    const seasonNum = parseInt(match[2], 10);
+    return `${series}-t${seasonNum}`;
+  }
   return null;
 }
 
 function extractSeasonFromEpisode(mediaId: string): string | null {
-  const match = mediaId.match(/^(breakingbad|simpsons|bettercallsaul|onepiece|blackmirror|bebereno|futurama)-(\d+)x(\d+)$/i);
-  if (match) return match[1].toLowerCase() + '-t' + match[2];
+  let match = mediaId.match(/^(breakingbad|simpsons)-(\d+)x(\d+)$/i);
+  if (match) {
+    const series = match[1].toLowerCase();
+    const seasonNum = parseInt(match[2], 10);
+    return `${series}-t${seasonNum}`;
+  }
+  match = mediaId.match(/^(bettercallsaul|onepiece|blackmirror|bebereno|futurama)-t(\d+)x(\d+)$/i);
+  if (match) {
+    const series = match[1].toLowerCase();
+    const seasonNum = parseInt(match[2], 10);
+    return `${series}-t${seasonNum}`;
+  }
   return null;
 }
 
@@ -180,7 +194,13 @@ export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
   const getEpisodesForFolder = (folderId: string): UnifiedMedia[] => {
     const seasonId = extractSeasonId(folderId);
     if (!seasonId) return [];
-    return episodes.filter(ep => extractSeasonFromEpisode(ep.id) === seasonId);
+    
+    const matchingEpisodes = episodes.filter(ep => {
+      const epSeason = extractSeasonFromEpisode(ep.id);
+      return epSeason === seasonId;
+    });
+    
+    return matchingEpisodes;
   };
 
   const folderItems = folders.map(folder => ({
@@ -190,7 +210,7 @@ export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
 
   return (
     <div className="space-y-6">
-      {folderItems.map(({ folder, episodes }) => (
+      {folderItems.map(({ folder, episodes: folderEpisodes }) => (
         <div key={folder.id} className="border-2 border-zinc-900 bg-white overflow-hidden">
           <div
             onClick={() => handleMediaClick(folder)}
@@ -207,19 +227,25 @@ export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
               <p className="text-zinc-700 text-sm">{folder.description}</p>
             </div>
             <span className="text-zinc-900 font-bold text-sm">
-              {episodes.length} episodios
+              {folderEpisodes.length} episodios
             </span>
           </div>
           
-          {expandedFolders.has(folder.id) && episodes.length > 0 && (
+          {expandedFolders.has(folder.id) && folderEpisodes.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 bg-zinc-50">
-              {episodes.map((episode) => (
+              {folderEpisodes.map((episode) => (
                 <MediaCard 
                   key={episode.id} 
                   item={episode} 
                   onSelectMedia={onSelectMedia} 
                 />
               ))}
+            </div>
+          )}
+          
+          {expandedFolders.has(folder.id) && folderEpisodes.length === 0 && (
+            <div className="p-4 bg-zinc-50 text-zinc-500 text-center">
+              No hay episodios disponibles para esta temporada
             </div>
           )}
         </div>
