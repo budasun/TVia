@@ -969,7 +969,7 @@ export async function GET(request: Request) {
         }));
 
         if (category === 'pelicula' && query === '') allVideos = [...PELICULAS, ...allVideos];
-        if (category === 'tutorial' && query === '') allVideos = [...TUTORIALES, ...allVideos];
+        if (category === 'tutorial' && query === '') allVideos = [...allVideos, ...TUTORIALES];
         searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
         console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
       }
