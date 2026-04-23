@@ -740,7 +740,7 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
                   </AnimatePresence>
                 </>
               ) : media?.url?.includes('drive.google.com') ? (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-800 z-20">
+                <div className="relative w-full h-full bg-zinc-800 z-20">
                   <iframe
                     src={embedUrl || media.url}
                     className="w-full h-full"
@@ -752,7 +752,7 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
                     href={media.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="absolute bottom-4 right-4 inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold border-2 border-white transition-colors"
+                    className="absolute top-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold border-2 border-white transition-colors z-30"
                   >
                     <Play className="w-4 h-4" />
                     Abrir en nueva pestaña
