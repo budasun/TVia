@@ -71,13 +71,13 @@ function extractSeasonId(mediaId: string): string | null {
 
 function extractSeasonFromEpisode(mediaId: string): string | null {
   const lowerId = mediaId.toLowerCase();
-  let match = lowerId.match(/^(breakingbad|simpsons)-(\d+)x(\d+)$/);
+  let match = lowerId.match(/^(breakingbad|simpsons|futurama)-(\d+)x(\d+)$/);
   if (match) {
     const series = match[1];
     const seasonNum = parseInt(match[2], 10);
     return `${series}-t${seasonNum}`;
   }
-  match = lowerId.match(/^(bettercallsaul|onepiece|blackmirror|bebereno|futurama)-t(\d+)x(\d+)$/);
+  match = lowerId.match(/^(bettercallsaul|onepiece|blackmirror|bebereno)-t(\d+)x(\d+)$/);
   if (match) {
     const series = match[1];
     const seasonNum = parseInt(match[2], 10);
