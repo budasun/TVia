@@ -37,9 +37,9 @@ const categoryLabels: Record<string, string> = {
   concierto: 'Concierto',
   arte: 'Arte',
   entretenimiento: 'TV',
-  cortometraje: 'Corto',
+  cortonneur: 'Corto',
   recetas: 'Receta',
-  series: 'Serie',
+  series: 'TV',
   noticias: 'Noticia',
 };
 

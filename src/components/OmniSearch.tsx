@@ -26,7 +26,7 @@ const categories = [
   { id: 'concierto' as CategoryFilter, label: 'Conciertos', icon: Music },
   { id: 'arte' as CategoryFilter, label: 'Arte', icon: Palette },
   { id: 'entretenimiento' as CategoryFilter, label: 'TV', icon: Tv },
-  { id: 'series' as CategoryFilter, label: 'Series', icon: BookOpen },
+  { id: 'series' as CategoryFilter, label: 'TV', icon: BookOpen },
 ];
 
 const durationOptions = [

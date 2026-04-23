@@ -50,7 +50,7 @@ const CATEGORY_TITLES: Record<CategoryFilter, string> = {
   arte: 'Arte',
   cortometraje: 'Cortos',
   entretenimiento: 'TV',
-  series: 'Series',
+  series: 'TV',
   noticias: 'Noticias',
 };
 
