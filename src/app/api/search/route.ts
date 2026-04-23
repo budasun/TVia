@@ -679,11 +679,19 @@ export async function GET(request: Request) {
         console.log(`🔄 Force refresh para "${cacheKey}"`);
       }
 
-      if (category === 'series') {
+      if (category === 'entretenimiento') {
+        searchCache.delete(cacheKey);
+        console.log('🎬 Cargando Entretenimiento - Simpsons + Futurama...');
+        if (query === '' || query.toLowerCase().includes('simpsons') || query.toLowerCase().includes('futurama')) {
+          allVideos = [...SIMPSONS_EPISODES];
+          searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
+          console.log(`💾 Guardado Entretenimiento: ${allVideos.length} episodios`);
+        }
+      } else if (category === 'series') {
         searchCache.delete(cacheKey);
         console.log('🎬 Cargando Series - Breaking Bad + Bebé Reno + Better Call Saul + One Piece...');
-        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('los anillos') || query.toLowerCase().includes('anillos de poder') || query.toLowerCase().includes('rings of power') || query.toLowerCase().includes('simpsons') || query.toLowerCase().includes('mandalorian')) {
-          allVideos = [...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LOTR_ANILLOS_EPISODES, ...SIMPSONS_EPISODES, ...MANDALORIAN];
+        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebé reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('los anillos') || query.toLowerCase().includes('anillos de poder') || query.toLowerCase().includes('rings of power') || query.toLowerCase().includes('mandalorian')) {
+          allVideos = [...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LOTR_ANILLOS_EPISODES, ...MANDALORIAN];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
           console.log(`💾 Guardado Series: ${allVideos.length} episodios`);
         } else {
