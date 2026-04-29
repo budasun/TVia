@@ -11,6 +11,18 @@ function getCacheDuration(category: string): number {
 }
 
 const BREAKINGBAD_EPISODES: UnifiedMedia[] = [
+  {
+    id: 'super-mario-galaxy-2026',
+    title: 'Super Mario Galaxy: La película (2026)',
+    source: 'youtube',
+    url: 'https://ok.ru/videoembed/13653332003505?nochat=1',
+    thumbnail: 'https://sun9-55.userapi.com/s/v1/ig2/6m2bOyr7H919ovfBDeaIgvZAHHZO9YdoeH2Up71gD5PDMUQxl9uktr7hwvPNqV2mtVUQ3rs4klxohhaVWfNiXlft.jpg?quality=95&as=32x48,48x72,72x108,108x162,160x240,240x360,300x450&from=bu&u=DTgKkzaMNY2yhxrbFJ7N0kM6qjAkMmiGjlSTMaij9Vg&cs=300x0',
+    description: 'Mario y Luigi, los hermanos plomeros, se dedican a resolver todo tipo de problemas cotidianos en su nuevo hogar, el Reino Champiñón, con su habitual actitud positiva. Mientras ayudan a la princesa Peach e intentan reformar a un diminuto Bowser que está encarcelado, conocen a un nuevo compañero: Yoshi. Sin embargo, la fiesta de cumpleaños de la princesa Peach desencadena una aventura galáctica que envía a Mario y Luigi al espacio para detener los malvados planes de Bowser Jr. y salvar a Rosalina.',
+    category: 'pelicula',
+    tags: [],
+    author: 'Nintendo',
+    duration: '90 min'
+  },
   { id: 'breakingbad-t1', title: 'Breaking Bad Temporada 1', source: 'folder', url: '', thumbnail: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic1.srcdn.com%2Fwordpress%2Fwp-content%2Fuploads%2F2023%2F07%2Fbreaking-bad-pilot-walt-underpants-gun-police.jpg&f=1&nofb=1&ipt=1a348546827a19284ba03b526a18606dbcdd1c0b17695763d8f54208275061fc', description: 'Breaking Bad Temporada 1 - 7 episodios', category: 'series', tags: [], author: 'AMC', duration: '' },
   { id: 'breakingbad-t2', title: 'Breaking Bad Temporada 2', source: 'folder', url: '', thumbnail: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.firstcuriosity.com%2Fwp-content%2Fuploads%2F2025%2F05%2F13155729%2FBreaking-Bad.jpg&f=1&nofb=1&ipt=21eab7f4ec77862b26f0cffeaf8856234dfacda06390c4debc6719c01455b2ce', description: 'Breaking Bad Temporada 2 - 13 episodios', category: 'series', tags: [], author: 'AMC', duration: '' },
   { id: 'breakingbad-t3', title: 'Breaking Bad Temporada 3', source: 'folder', url: '', thumbnail: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.firstcuriosity.com%2Fwp-content%2Fuploads%2F2025%2F05%2F13155729%2FBreaking-Bad.jpg&f=1&nofb=1&ipt=21eab7f4ec77862b26f0cffeaf8856234dfacda06390c4debc6719c01455b2ce', description: 'Breaking Bad Temporada 3 - 13 episodios', category: 'series', tags: [], author: 'AMC', duration: '' },
