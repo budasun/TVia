@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -8,12 +8,16 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+const FIRST_VISIT_KEY = 'tvia_first_visit_guide_dismissed';
+
 export default function InstallPWA() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [isIOSDevice, setIsIOSDevice] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
+  const [showFirstVisitGuide, setShowFirstVisitGuide] = useState(false);
+  const promptFiredRef = useRef(false);
 
 
   useEffect(() => {
@@ -30,6 +34,7 @@ export default function InstallPWA() {
     // Listen for the install prompt
     const handleBeforeInstall = (e: Event) => {
       e.preventDefault();
+      promptFiredRef.current = true;
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
@@ -44,9 +49,18 @@ export default function InstallPWA() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
     window.addEventListener('appinstalled', handleAppInstalled);
 
+    // Show first-visit guide after a moment if no install prompt available
+    const timer = setTimeout(() => {
+      const dismissed = localStorage.getItem(FIRST_VISIT_KEY);
+      if (!promptFiredRef.current && !isIOS && !dismissed) {
+        setShowFirstVisitGuide(true);
+      }
+    }, 1500);
+
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
       window.removeEventListener('appinstalled', handleAppInstalled);
+      clearTimeout(timer);
     };
   }, []);
 
@@ -76,11 +90,16 @@ export default function InstallPWA() {
     }
   }, [deferredPrompt, isIOSDevice]);
 
+  const handleDismissFirstGuide = useCallback(() => {
+    setShowFirstVisitGuide(false);
+    localStorage.setItem(FIRST_VISIT_KEY, 'true');
+  }, []);
+
   // Don't render if already installed and no toast to show
   if (isInstalled && !showToast) return null;
 
-  // Don't render if no install prompt and not iOS
-  if (!deferredPrompt && !isIOSDevice && !showToast) return null;
+  // Don't render if nothing to show
+  if (!deferredPrompt && !isIOSDevice && !showToast && !showFirstVisitGuide) return null;
 
   return (
     <>
@@ -166,6 +185,60 @@ export default function InstallPWA() {
               <button
                 className="ios-guide-ok"
                 onClick={() => setShowIOSGuide(false)}
+              >
+                ¡Entendido!
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* First Visit Guide Modal */}
+      <AnimatePresence>
+        {showFirstVisitGuide && (
+          <motion.div
+            className="ios-guide-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleDismissFirstGuide}
+          >
+            <motion.div
+              className="ios-guide-card"
+              initial={{ opacity: 0, y: 60, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 60, scale: 0.9 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="ios-guide-close"
+                onClick={handleDismissFirstGuide}
+                aria-label="Cerrar"
+              >
+                ✕
+              </button>
+
+              <div className="ios-guide-icon">📲</div>
+              <h3 className="ios-guide-title">Instalar la App</h3>
+
+              <div className="ios-guide-steps">
+                <div className="ios-guide-step">
+                  <div className="ios-guide-step-number">1</div>
+                  <p><strong>Refresca la página</strong> para activar el botón de instalación</p>
+                </div>
+                <div className="ios-guide-step">
+                  <div className="ios-guide-step-number">2</div>
+                  <p>Presiona el botón <strong>&quot;Descargar App&quot;</strong> que aparecerá abajo</p>
+                </div>
+                <div className="ios-guide-step">
+                  <div className="ios-guide-step-number">3</div>
+                  <p>Confirma para agregar la app a tu dispositivo</p>
+                </div>
+              </div>
+
+              <button
+                className="ios-guide-ok"
+                onClick={handleDismissFirstGuide}
               >
                 ¡Entendido!
               </button>
