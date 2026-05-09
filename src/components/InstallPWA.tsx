@@ -14,7 +14,7 @@ export default function InstallPWA() {
   const [showToast, setShowToast] = useState(false);
   const [isIOSDevice, setIsIOSDevice] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
-  const [showAndroidGuide, setShowAndroidGuide] = useState(false);
+
 
   useEffect(() => {
     // Check if already installed
@@ -73,8 +73,6 @@ export default function InstallPWA() {
       }
     } else if (isIOSDevice) {
       setShowIOSGuide(true);
-    } else {
-      setShowAndroidGuide(true);
     }
   }, [deferredPrompt, isIOSDevice]);
 
@@ -165,60 +163,6 @@ export default function InstallPWA() {
               <button
                 className="ios-guide-ok"
                 onClick={() => setShowIOSGuide(false)}
-              >
-                ¡Entendido!
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Android Installation Guide Modal */}
-      <AnimatePresence>
-        {showAndroidGuide && (
-          <motion.div
-            className="ios-guide-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowAndroidGuide(false)}
-          >
-            <motion.div
-              className="ios-guide-card"
-              initial={{ opacity: 0, y: 60, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 60, scale: 0.9 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                className="ios-guide-close"
-                onClick={() => setShowAndroidGuide(false)}
-                aria-label="Cerrar"
-              >
-                ✕
-              </button>
-
-              <div className="ios-guide-icon">📲</div>
-              <h3 className="ios-guide-title">Instalar en Android</h3>
-
-              <div className="ios-guide-steps">
-                <div className="ios-guide-step">
-                  <div className="ios-guide-step-number">1</div>
-                  <p>Abre el menú de Chrome <span style={{ fontSize: '20px' }}>⋮</span></p>
-                </div>
-                <div className="ios-guide-step">
-                  <div className="ios-guide-step-number">2</div>
-                  <p>Selecciona <strong>&quot;Instalar app&quot;</strong> o <strong>&quot;Agregar a pantalla de inicio&quot;</strong></p>
-                </div>
-                <div className="ios-guide-step">
-                  <div className="ios-guide-step-number">3</div>
-                  <p>Toca <strong>&quot;Instalar&quot;</strong> para confirmar</p>
-                </div>
-              </div>
-
-              <button
-                className="ios-guide-ok"
-                onClick={() => setShowAndroidGuide(false)}
               >
                 ¡Entendido!
               </button>
