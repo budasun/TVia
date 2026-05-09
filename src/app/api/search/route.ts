@@ -987,14 +987,15 @@ export async function GET(request: Request) {
           durationSeconds: 0,
         }));
 
-        if (category === 'pelicula' && query === '') allVideos = [...PELICULAS, ...allVideos];
-        if (category === 'tutorial' && query === '') allVideos = [...TUTORIALES, ...allVideos];
+        if (category === 'pelicula') allVideos = [...PELICULAS, ...allVideos];
+        if (category === 'tutorial') allVideos = [...TUTORIALES, ...allVideos];
         searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
         console.log(`💾 Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
       }
     }
 
     const durationFilter = searchParams.get('duration');
+    if (durationFilter) {
       allVideos = allVideos.filter(v => {
         if (v.source === 'folder') return true;
         if (!v.duration) return false;
