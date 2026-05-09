@@ -140,10 +140,15 @@ function MediaCard({ item, onSelectMedia }: { item: UnifiedMedia; onSelectMedia:
         <div className={`absolute top-2 right-2 px-2 py-1 text-xs font-bold uppercase ${categoryBadgeColors[item.category] || 'bg-zinc-400 text-zinc-900'} border border-zinc-900`}>
           {categoryLabels[item.category] || item.category}
         </div>
-        {item.duration && (
+        {item.duration ? (
           <div className="absolute bottom-2 right-2 px-2 py-1 bg-zinc-900 text-cyan-400 text-xs font-bold border border-cyan-400 flex items-center gap-1">
             <Clock className="w-3 h-3" />
             {item.duration}
+          </div>
+        ) : (
+          <div className="absolute bottom-2 right-2 px-2 py-1 bg-zinc-900 text-gray-400 text-xs font-bold border border-gray-400 flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            Duración no disponible
           </div>
         )}
       </div>
@@ -196,7 +201,22 @@ export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
   };
 
   const folders = media.filter(m => m.source === 'folder');
-  const episodes = media.filter(m => m.source !== 'folder');
+  const EMBED_WHITELIST = ['barmonrey.com', 'streamimdb.ru'];
+
+const isPlayable = (item: UnifiedMedia) => {
+  if (item.source === 'youtube' || item.source === 'folder') return true;
+  if (item.source === 'embed') {
+    try {
+      const host = new URL(item.url).hostname.replace('www.', '');
+      return EMBED_WHITELIST.includes(host);
+    } catch {
+      return false;
+    }
+  }
+  return false;
+};
+
+const episodes = media.filter(m => isPlayable(m));
 
   const getEpisodesForFolder = (folderId: string): UnifiedMedia[] => {
     const seasonId = extractSeasonId(folderId);
