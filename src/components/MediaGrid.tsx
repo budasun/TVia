@@ -240,7 +240,7 @@ const folderItems = folders.map(folder => ({
   );
 
   const looseEpisodes = media.filter(
-    (item) => item.source !== 'folder' && !episodeIdsInFolders.has(item.id)
+    (item) => isPlayable(item) && !episodeIdsInFolders.has(item.id)
   );
 
   return (
