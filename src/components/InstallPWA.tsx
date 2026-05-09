@@ -79,10 +79,13 @@ export default function InstallPWA() {
   // Don't render if already installed and no toast to show
   if (isInstalled && !showToast) return null;
 
+  // Don't render if no install prompt and not iOS
+  if (!deferredPrompt && !isIOSDevice && !showToast) return null;
+
   return (
     <>
       {/* Install Button */}
-      {!isInstalled && (
+      {!isInstalled && (deferredPrompt || isIOSDevice) && (
         <motion.button
           onClick={handleInstallClick}
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
