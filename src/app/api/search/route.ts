@@ -948,7 +948,7 @@ export async function GET(request: Request) {
 
           const modifiers = ['', '2026', '2025', 'nuevo'];
           const searchStrings = baseStrings.flatMap(base => modifiers.map(mod => mod ? `${base} ${mod}` : base));
-          console.log(`ðŸš€ Lanzando ${searchStrings.length} hilos de bÃºsqueda para mÃ¡xima cobertura...`);
+          console.log(`Lanzando ${searchStrings.length} hilos de bÃºsqueda para mÃ¡xima cobertura...`);
 
           const searchPromises = searchStrings.map(searchStr => YouTube.search(searchStr, { limit: 30, type: "video" }).catch(() => []));
           const resultsMatrix = await Promise.all(searchPromises);
@@ -972,9 +972,9 @@ export async function GET(request: Request) {
             });
             if (strictFiltered.length >= 20) {
               filteredRaw = strictFiltered;
-              console.log(`ðŸ” Filtro aplicado: ${strictFiltered.length} resultados`);
+              console.log(`Filtro aplicado: ${strictFiltered.length} resultados`);
             } else {
-              console.log(`âš ï¸ Filtro muy estricto (${strictFiltered.length} res). Usando todos ${filteredRaw.length} resultados.`);
+              console.log(`Filtro muy estricto (${strictFiltered.length} res). Usando todos ${filteredRaw.length} resultados.`);
             }
           }
 
