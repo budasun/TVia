@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import type { UnifiedMedia, MediaCategory, CategoryFilter } from '@/types';
 import YouTube from 'youtube-sr';
 
@@ -996,6 +996,7 @@ export async function GET(request: Request) {
         searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
         console.log(`ðŸ’¾ Guardado MATRIX: ${cacheKey} (${allVideos.length} videos finales)`);
       }
+    }
     }
 
     const durationFilter = searchParams.get('duration');
