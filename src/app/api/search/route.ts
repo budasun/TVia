@@ -522,6 +522,18 @@ duration: '90 min',
     author: 'streamimdb',
     duration: ''
   },
+  {
+    id: 'que-viva-mexico-2023',
+    title: '¡Que viva México! (2023)',
+    source: 'embed',
+    url: 'https://streamimdb.ru/embed/movie/tt22185848',
+    thumbnail: 'https://www.sonypictures.com.mx/sites/mexico/files/2023-03/QVM_KeyArt_1400x2100.jpg',
+    description: 'Exploración vibrante y musical de la cultura mexicana.',
+    category: 'pelicula',
+    tags: ['mexico','cultura','musical'],
+    author: 'streamimdb',
+    duration: ''
+  },
    { id: 'tt0317248', title: 'Ciudad de Dios (2002)', source: 'embed', url: 'https://streamimdb.ru/embed/movie/tt0317248', thumbnail: 'https://files.filmaps.com/films/68cfdb80-cc32-4909-a213-01b9cc7932e7/posters/69604827-6faf-4a73-8a89-bcbb75b73d4a.jpg', description: 'Una cruda mirada al surgimiento del crimen organizado en las favelas de RÃ­o de Janeiro, siguiendo la vida de varios niÃ±os que crecen inmersos en la violencia.', category: 'pelicula', tags: ['ciudad de dios','crimen','drama','brasil'], author: 'streamimdb', duration: '149 min' },
   { id: 'psychomagic-2019', title: 'Psychomagic: A Healing Art (2019)', source: 'embed', url: 'https://streamimdb.ru/embed/movie/tt10510736', thumbnail: 'https://www.nourfilms.com/wp-content/uploads/2020/11/psychomagie-un-art-pour-guerir-affiche.jpg', description: 'Alejandro Jodorowsky presenta su teorÃ­a de la terapia de trauma a travÃ©s de la psicomagia, un concepto Ãºnico de sanaciÃ³n que utiliza el arte performÃ¡tico como vehÃ­culo para contrarrestar el profundo sufrimiento psÃ­quico.', category: 'pelicula', tags: ['psychomagic', 'jodorowsky', 'documental', 'terapia', 'arte'], author: 'streamimdb', duration: '100 min' },
   { id: 'microcosmos-1996', title: 'Microcosmos (1996)', source: 'embed', url: 'https://streamimdb.ru/embed/movie/tt0117040', thumbnail: 'https://www.otraparte.org/wp-content/uploads/microcosmos-1.jpg', description: 'Un documental sobre la vida de los insectos en prados y estanques, utilizando increÃ­bles primeros planos, cÃ¡mara lenta y fotografÃ­a time-lapse. Incluye abejas recolectando nÃ©ctar, mariquitas comiendo Ã¡caros, caracoles apareÃ¡ndose, araÃ±as envolviendo a sus presas y un escarabajo empujando su bola de estiÃ©rcol cuesta arriba.', category: 'pelicula', tags: ['microcosmos', 'documental', 'naturaleza', 'insectos', 'francia'], author: 'streamimdb', duration: '80 min' },
