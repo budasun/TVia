@@ -127,16 +127,24 @@ function MediaCard({ item, onSelectMedia }: { item: UnifiedMedia; onSelectMedia:
             )}
           </div>
         </div>
-        {isFolder ? (
-          <div className="absolute top-2 left-2 px-2 py-1 bg-cyan-400 text-zinc-900 text-xs font-bold uppercase border border-zinc-900 flex items-center gap-1">
-            <Folder className="w-3 h-3" />
-            TEMPORADA
-          </div>
-        ) : (
-          <div className="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-bold uppercase border border-zinc-900">
-            {item.source.toUpperCase()}
-          </div>
-        )}
+{isFolder ? (
+            <div className="absolute top-2 left-2 px-2 py-1 bg-cyan-400 text-zinc-900 text-xs font-bold uppercase border border-zinc-900 flex items-center gap-1">
+              <Folder className="w-3 h-3" />
+              TEMPORADA
+            </div>
+          ) : (
+            <div className="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-bold uppercase border border-zinc-900">
+              {item.source.toUpperCase()}
+            </div>
+          )}
+          {item.id.startsWith('las-muertas') && (
+            <button
+              onClick={(e) => { e.stopPropagation(); window.open(item.url, '_blank'); }}
+              className="absolute top-2 left-10 px-2 py-1 bg-cyan-600 text-white text-xs font-bold uppercase border border-zinc-900 hover:bg-cyan-700"
+            >
+              Abrir
+            </button>
+          )}
         <div className={`absolute top-2 right-2 px-2 py-1 text-xs font-bold uppercase ${categoryBadgeColors[item.category] || 'bg-zinc-400 text-zinc-900'} border border-zinc-900`}>
           {categoryLabels[item.category] || item.category}
         </div>
