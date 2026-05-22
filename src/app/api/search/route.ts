@@ -598,6 +598,20 @@ const BEBE_RENO_EPISODES: UnifiedMedia[] = [
   { id: 'bebereno-t1x07', title: 'BebÃ© Reno T1x07 - CapÃ­tulo 7 (2024)', source: 'embed', url: 'https://barmonrey.com/player/0xAX6jel8DnwRdw/', thumbnail: 'https://sun9-67.userapi.com/impg/F3jpkfE9j1fniByEHvn6Y15up8MxhCQ6-MBDAw/dvgl6NpAB9Q.jpg?size=500x750&quality=95&sign=ba6b9edc3efa764c75d5974ca5aa3fca&type=album', description: 'BebÃ© Reno Temporada 1 - CapÃ­tulo 7', category: 'series', tags: ['bebÃ© reno', 'serie', 'temporada 1', 'comedia', 'drama'], author: 'Netflix', duration: '' },
 ];
 
+const LAS_MUERTAS_EPISODES: UnifiedMedia[] = [
+  {
+    id: 'las-muertas-t1',
+    title: 'Las Muertas (2025) - Capítulo 1',
+    source: 'embed',
+    url: 'https://streamimdb.ru/embed/tv/tt31219594',
+    thumbnail: 'https://pics.filmaffinity.com/las_muertas-639159394-large.jpg',
+    description: 'Primer episodio de la miniserie Las Muertas.',
+    category: 'series',
+    tags: ['las muertas','miniserie','drama'],
+    author: 'streamimdb',
+    duration: ''
+  }
+];
 const BETTER_CALL_SAUL_EPISODES: UnifiedMedia[] = [
   { id: 'bettercallsaul-t1', title: 'Better Call Saul Temporada 1', source: 'folder', url: '', thumbnail: 'https://image.tmdb.org/t/p/w500/kXPlwZm3RefxpSU5E3Mu4Yyvn40.jpg', description: 'Better Call Saul Temporada 1 - 10 episodios', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '' },
   { id: 'bettercallsaul-t2', title: 'Better Call Saul Temporada 2', source: 'folder', url: '', thumbnail: 'https://image.tmdb.org/t/p/w500/kXPlwZm3RefxpSU5E3Mu4Yyvn40.jpg', description: 'Better Call Saul Temporada 2 - 10 episodios', category: 'series', tags: ['better call saul', 'serie', 'temporada 2'], author: 'AMC', duration: '' },
@@ -790,7 +804,7 @@ export async function GET(request: Request) {
         searchCache.delete(cacheKey);
         console.log('ðŸŽ¬ Cargando Series - Breaking Bad + BebÃ© Reno + Better Call Saul + One Piece + Mandalorian...');
         if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebÃ© reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('mandalorian')) {
-          allVideos = [...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...MANDALORIAN];
+          allVideos = [...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LAS_MUERTAS_EPISODES, ...MANDALORIAN];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
           console.log(`ðŸ’¾ Guardado Series: ${allVideos.length} episodios`);
         } else {
