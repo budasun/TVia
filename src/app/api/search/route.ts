@@ -10,6 +10,18 @@ function getCacheDuration(category: string): number {
   return category === 'entretenimiento' ? TV_CACHE_DURATION : CACHE_DURATION;
 }
 
+const STRANGERTHINGS_EPISODES: UnifiedMedia[] = [
+  { id: 'strangerthings-t1', title: 'Stranger Things Temporada 1', source: 'folder', url: '', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things Temporada 1 - 8 episodios', category: 'series', tags: [], author: 'Netflix', duration: '' },
+  { id: 'strangerthings-01x01', title: '01x01 - La desapariciÃ³n de Will Byers', source: 'youtube', url: 'https://barmonrey.com/player/fe2TGQG5UEoz7NF/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E1 - Will Byers desaparece misteriosamente tras jugar Calabozos y Dragones.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+  { id: 'strangerthings-01x02', title: '01x02 - La loca de la calle Maplewood', source: 'youtube', url: 'https://barmonrey.com/player/AKXdr2L6EiniNSR/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E2 - Joyce busca a Will desesperadamente.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+  { id: 'strangerthings-01x03', title: '01x03 - Holly, Jolly', source: 'youtube', url: 'https://barmonrey.com/player/MJZ1OIfupZpOyRZ/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E3 - Los chicos conocen a Eleven.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+  { id: 'strangerthings-01x04', title: '01x04 - El cuerpo', source: 'youtube', url: 'https://barmonrey.com/player/3eybNOhCg2oLCZj/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E4 - El cuerpo de Will es encontrado.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+  { id: 'strangerthings-01x05', title: '01x05 - La pulga y el acrÃ³bata', source: 'youtube', url: 'https://barmonrey.com/player/lqbaauQjPITpWSW/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E5 - Los chicos buscan a Eleven.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+  { id: 'strangerthings-01x06', title: '01x06 - El monstruo', source: 'youtube', url: 'https://barmonrey.com/player/SQvAgLvMk5en0Fi/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E6 - El monstruo ataca.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+  { id: 'strangerthings-01x07', title: '01x07 - La baÃ±era', source: 'youtube', url: 'https://barmonrey.com/player/IIb6m10IavqoF1F/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E7 - Eleven usa sus poderes.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+  { id: 'strangerthings-01x08', title: '01x08 - El otro lado', source: 'youtube', url: 'https://barmonrey.com/player/j7yoaGBCkU72FQa/', thumbnail: 'https://pelis182.net/wp-content/uploads/2022/06/ST1.jpg', description: 'Stranger Things T1E8 - El enfrentamiento final.', category: 'series', tags: [], author: 'Netflix', duration: '49 min' },
+];
+
 const BREAKINGBAD_EPISODES: UnifiedMedia[] = [
   { id: 'breakingbad-t1', title: 'Breaking Bad Temporada 1', source: 'folder', url: '', thumbnail: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic1.srcdn.com%2Fwordpress%2Fwp-content%2Fuploads%2F2023%2F07%2Fbreaking-bad-pilot-walt-underpants-gun-police.jpg&f=1&nofb=1&ipt=1a348546827a19284ba03b526a18606dbcdd1c0b17695763d8f54208275061fc', description: 'Breaking Bad Temporada 1 - 7 episodios', category: 'series', tags: [], author: 'AMC', duration: '' },
   { id: 'breakingbad-t2', title: 'Breaking Bad Temporada 2', source: 'folder', url: '', thumbnail: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.firstcuriosity.com%2Fwp-content%2Fuploads%2F2025%2F05%2F13155729%2FBreaking-Bad.jpg&f=1&nofb=1&ipt=21eab7f4ec77862b26f0cffeaf8856234dfacda06390c4debc6719c01455b2ce', description: 'Breaking Bad Temporada 2 - 13 episodios', category: 'series', tags: [], author: 'AMC', duration: '' },
@@ -808,8 +820,8 @@ export async function GET(request: Request) {
       } else if (category === 'series') {
         searchCache.delete(cacheKey);
         console.log('ðŸŽ¬ Cargando Series - Breaking Bad + BebÃ© Reno + Better Call Saul + One Piece + Mandalorian...');
-        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebÃ© reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('mandalorian')) {
-          allVideos = [...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LAS_MUERTAS_EPISODES, ...MANDALORIAN];
+        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebÃ© reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('mandalorian') || query.toLowerCase().includes('stranger things') || query.toLowerCase().includes('strangerthings')) {
+          allVideos = [...STRANGERTHINGS_EPISODES, ...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LAS_MUERTAS_EPISODES, ...MANDALORIAN];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
           console.log(`ðŸ’¾ Guardado Series: ${allVideos.length} episodios`);
         } else {
