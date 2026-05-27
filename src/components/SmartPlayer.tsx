@@ -747,6 +747,7 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                     allowFullScreen
+                    referrerPolicy="no-referrer"
                     style={{ border: 0 }}
                   />
                   <a
