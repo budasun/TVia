@@ -634,6 +634,20 @@ const LAS_MUERTAS_EPISODES: UnifiedMedia[] = [
     duration: ''
   }
 ];
+const DIME_TU_NOMBRE_EPISODES: UnifiedMedia[] = [
+  {
+    id: 'dime-tu-nombre-t1',
+    title: 'Dime tu nombre (2025) - Capítulo 1',
+    source: 'embed',
+    url: 'https://streamimdb.ru/embed/tv/tt31536241',
+    thumbnail: 'https://m.media-amazon.com/images/M/MV5BYzdiZjNlMDQtY2Q3MS00MjEzLTkxOWYtMzI2MmNjMjAxMzQzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',
+    description: 'Primer episodio de la serie Dime tu nombre.',
+    category: 'series',
+    tags: ['dime tu nombre','serie','drama'],
+    author: 'streamimdb',
+    duration: ''
+  }
+];
 const BETTER_CALL_SAUL_EPISODES: UnifiedMedia[] = [
   { id: 'bettercallsaul-t1', title: 'Better Call Saul Temporada 1', source: 'folder', url: '', thumbnail: 'https://image.tmdb.org/t/p/w500/kXPlwZm3RefxpSU5E3Mu4Yyvn40.jpg', description: 'Better Call Saul Temporada 1 - 10 episodios', category: 'series', tags: ['better call saul', 'serie', 'temporada 1'], author: 'AMC', duration: '' },
   { id: 'bettercallsaul-t2', title: 'Better Call Saul Temporada 2', source: 'folder', url: '', thumbnail: 'https://image.tmdb.org/t/p/w500/kXPlwZm3RefxpSU5E3Mu4Yyvn40.jpg', description: 'Better Call Saul Temporada 2 - 10 episodios', category: 'series', tags: ['better call saul', 'serie', 'temporada 2'], author: 'AMC', duration: '' },
@@ -825,8 +839,8 @@ export async function GET(request: Request) {
       } else if (category === 'series') {
         searchCache.delete(cacheKey);
         console.log('ðŸŽ¬ Cargando Series - Breaking Bad + BebÃ© Reno + Better Call Saul + One Piece + Mandalorian...');
-        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebÃ© reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('mandalorian') || query.toLowerCase().includes('stranger things') || query.toLowerCase().includes('strangerthings')) {
-          allVideos = [...STRANGERTHINGS_EPISODES, ...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LAS_MUERTAS_EPISODES, ...MANDALORIAN];
+        if (query === '' || query.toLowerCase().includes('better call saul') || query.toLowerCase().includes('one piece') || query.toLowerCase().includes('bebÃ© reno') || query.toLowerCase().includes('bebereno') || query.toLowerCase().includes('breaking bad') || query.toLowerCase().includes('breakingbad') || query.toLowerCase().includes('mandalorian') || query.toLowerCase().includes('stranger things') || query.toLowerCase().includes('strangerthings') || query.toLowerCase().includes('dime tu nombre') || query.toLowerCase().includes('las muertas')) {
+          allVideos = [...STRANGERTHINGS_EPISODES, ...BREAKINGBAD_EPISODES, ...BEBE_RENO_EPISODES, ...BETTER_CALL_SAUL_EPISODES, ...ONE_PIECE_EPISODES, ...LAS_MUERTAS_EPISODES, ...DIME_TU_NOMBRE_EPISODES, ...MANDALORIAN];
           searchCache.set(cacheKey, { timestamp: Date.now(), data: allVideos });
           console.log(`ðŸ’¾ Guardado Series: ${allVideos.length} episodios`);
         } else {
