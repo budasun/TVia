@@ -141,6 +141,20 @@ export default function SmartPlayer({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMouseIdle, setIsMouseIdle] = useState(false);
 
+  const isPelis182 = useMemo(() => {
+    if (!media) return false;
+    const authorLower = media.author?.toLowerCase() || '';
+    const urlLower = media.url?.toLowerCase() || '';
+    const thumbnailLower = media.thumbnail?.toLowerCase() || '';
+    
+    return (
+      authorLower === 'pelis182' ||
+      urlLower.includes('barmonrey.com') ||
+      urlLower.includes('pelis182') ||
+      thumbnailLower.includes('pelis182')
+    );
+  }, [media]);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 769);
@@ -782,14 +796,27 @@ Formato: Usa markdown para estructura. Sé detallado y preciso.`;
                   </div>
                 </div>
               ) : media?.url ? (
-                <iframe
-                  src={embedUrl || media.url}
-                  className="absolute inset-0 w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  allowFullScreen
-                  referrerPolicy="no-referrer"
-                  style={{ border: 0 }}
-                />
+                <>
+                  <iframe
+                    src={embedUrl || media.url}
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    referrerPolicy="no-referrer"
+                    style={{ border: 0 }}
+                  />
+                  {isPelis182 && (
+                    <a
+                      href={media.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute top-4 left-4 p-2 bg-transparent hover:bg-zinc-800/50 text-zinc-500 hover:text-zinc-300 transition-colors z-30 rounded"
+                      title="Abrir en nueva pestaña"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                    </a>
+                  )}
+                </>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
                   <div className="text-center p-8">
