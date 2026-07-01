@@ -209,7 +209,7 @@ export default function MediaGrid({ media, onSelectMedia }: MediaGridProps) {
   };
 
   const folders = media.filter(m => m.source === 'folder');
-  const EMBED_WHITELIST = ['barmonrey.com', 'streamimdb.ru'];
+  const EMBED_WHITELIST = ['barmonrey.com', 'streamimdb.ru', 'drive.google.com', 'jennifereconomicgive.com', 'minochinos.com'];
 
 const isPlayable = (item: UnifiedMedia) => {
   if (item.source === 'youtube' || item.source === 'folder') return true;
