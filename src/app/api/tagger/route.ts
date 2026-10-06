@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
+import { chatWithFallback } from '@/lib/groq';
 
-const TAGGER_MODEL = 'llama-3.3-70b-versatile';
+const TAGGER_MODEL_CHAIN = [
+  'openai/gpt-oss-20b',
+  'qwen/qwen3.8-27b',
+  'openai/gpt-oss-120b',
+  'allam-2-7b',
+];
 
 async function fetchTranscript(videoId: string): Promise<string> {
   try {
@@ -91,52 +97,42 @@ CATEGORÍAS VÁLIDAS: Documental, Ciencia, Ópera, Podcast, Tutorial, Concierto,
 Responde SOLO con JSON válido (sin markdown, sin explicaciones):
 {"tags": ["tag1", "tag2", "tag3"], "category": "Categoría"}`;
 
+    const fallbackResult = {
+      tags: extractTags(title || '', description || ''),
+      category: extractCategory(title || '', description || '')
+    };
+
     try {
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: TAGGER_MODEL,
-          messages: [{ role: 'user', content: systemPrompt }],
-          temperature: 0.1,
-          max_tokens: 200,
-        }),
+      const completion = await chatWithFallback({
+        models: process.env.GROQ_TAGGER_MODELS,
+        defaults: TAGGER_MODEL_CHAIN,
+        apiKey,
+        messages: [{ role: 'user', content: systemPrompt }],
+        temperature: 0.1,
+        maxTokens: 800,
+        timeoutMs: 20000,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const content = data.choices?.[0]?.message?.content || '';
-        
-        try {
-          const cleanContent = content.replace(/```json\n?|\n?```/g, '').trim();
-          const jsonMatch = cleanContent.match(/\{[^}]+\}/);
-          
-          if (jsonMatch) {
-            const result = JSON.parse(jsonMatch[0]);
-            console.log(`✅ Tagger generó: ${result.tags?.length || 0} tags, categoría: ${result.category}`);
-            return NextResponse.json({
-              tags: result.tags || ['video'],
-              category: result.category || 'Educativo'
-            });
-          }
-        } catch {
-          console.log('⚠️ Error parseando JSON del tagger');
+      if (completion) {
+        const cleanContent = completion.content.replace(/```json\n?|\n?```/g, '').trim();
+        const jsonMatch = cleanContent.match(/\{[^}]+\}/);
+
+        if (jsonMatch) {
+          const result = JSON.parse(jsonMatch[0]);
+          console.log(`✅ Tagger generó con ${completion.model}: ${result.tags?.length || 0} tags, categoría: ${result.category}`);
+          return NextResponse.json({
+            tags: result.tags || ['video'],
+            category: result.category || 'Educativo'
+          });
         }
-      } else {
-        const errorText = await response.text();
-        console.error(`❌ Error en Tagger: ${response.status} - ${errorText}`);
+
+        console.warn(`⚠️ ${completion.model} no devolvió JSON válido, usando extracción local`);
       }
     } catch (err) {
       console.error('❌ Error en API del Tagger:', err);
     }
 
-    return NextResponse.json({
-      tags: extractTags(title || '', description || ''),
-      category: extractCategory(title || '', description || '')
-    });
+    return NextResponse.json(fallbackResult);
 
   } catch (error) {
     console.error('Tagger Error:', error);

@@ -1,25 +1,13 @@
 import { NextResponse } from 'next/server';
-
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+import { chatWithFallback } from '@/lib/groq';
 
 const TIMEOUT_MS = 30000;
 
-async function fetchWithTimeout(url: string, options: RequestInit): Promise<Response> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-  
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-    return response;
-  } catch (error) {
-    clearTimeout(timeoutId);
-    throw error;
-  }
-}
+const TUTOR_MODEL_CHAIN = [
+  'openai/gpt-oss-120b',
+  'qwen/qwen3.8-27b',
+  'openai/gpt-oss-20b',
+];
 
 async function fetchTranscript(videoId: string): Promise<string | null> {
   try {
@@ -180,39 +168,26 @@ export async function POST(req: Request) {
       ...messages.map((msg: { role: string; content: string }) => ({ role: msg.role, content: msg.content }))
     ];
 
-    console.log(`🧠 Enviando solicitud a Groq con modelo: ${GROQ_MODEL}`);
-    
-    const response = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: apiMessages,
-        temperature: 0.5,
-        max_tokens: 4000,
-      }),
+    console.log(`🧠 Enviando solicitud a Groq (cadena: ${process.env.GROQ_TUTOR_MODELS || TUTOR_MODEL_CHAIN.join(', ')})`);
+
+    const completion = await chatWithFallback({
+      models: process.env.GROQ_TUTOR_MODELS,
+      defaults: TUTOR_MODEL_CHAIN,
+      apiKey,
+      messages: apiMessages,
+      temperature: 0.5,
+      maxTokens: 4000,
+      timeoutMs: TIMEOUT_MS,
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`❌ Error en respuesta de Groq: ${response.status} - ${errorText}`);
-      return NextResponse.json({ id: `msg-${Date.now()}`, content: 'El Tutor IA encontró un error. Por favor, intenta de nuevo.' }, { status: 500 });
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    
-    if (!content) {
-      return NextResponse.json({ id: `msg-${Date.now()}`, content: 'No pude generar una respuesta.' });
+    if (!completion) {
+      return NextResponse.json({ id: `msg-${Date.now()}`, content: 'El Tutor IA encontró un error. Por favor, intenta de nuevo.' }, { status: 502 });
     }
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    console.log(`✅ Tutor respondió en ${elapsed}s usando Groq: ${GROQ_MODEL}`);
-    
-    return NextResponse.json({ id: data.id || `msg-${Date.now()}`, content, model: GROQ_MODEL });
+    console.log(`✅ Tutor respondió en ${elapsed}s usando Groq: ${completion.model}`);
+
+    return NextResponse.json({ id: `msg-${Date.now()}`, content: completion.content, model: completion.model });
 
   } catch (error) {
     console.error('Tutor API Error:', error);
