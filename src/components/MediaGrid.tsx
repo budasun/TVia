@@ -104,7 +104,7 @@ function MediaCard({ item, onSelectMedia }: { item: UnifiedMedia; onSelectMedia:
   return (
     <div
       onClick={() => onSelectMedia(item)}
-      className={`block bg-white border-2 border-zinc-900 cursor-pointer hover:shadow-[6px_6px-0px_#00ffff] hover:-translate-y-1 transition-all duration-200 overflow-hidden ${isFolder ? 'ring-4 ring-cyan-400' : ''}`}
+      className={`block bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-zinc-700 cursor-pointer hover:shadow-[6px_6px-0px_#00ffff] hover:-translate-y-1 transition-all duration-200 overflow-hidden ${isFolder ? 'ring-4 ring-cyan-400' : ''}`}
     >
       <div className="relative aspect-video overflow-hidden bg-zinc-200">
         <img
@@ -160,21 +160,21 @@ function MediaCard({ item, onSelectMedia }: { item: UnifiedMedia; onSelectMedia:
           </div>
         )}
       </div>
-      <div className="p-4 bg-white">
-        <h3 className="text-zinc-900 font-bold text-sm line-clamp-2">
+      <div className="p-4 bg-white dark:bg-zinc-900">
+        <h3 className="text-zinc-900 dark:text-zinc-100 font-bold text-sm line-clamp-2">
           {item.title}
         </h3>
-        <p className="text-zinc-600 text-xs mt-2 line-clamp-2">
+        <p className="text-zinc-600 dark:text-zinc-400 text-xs mt-2 line-clamp-2">
           {item.description}
         </p>
-        <div className="flex items-center justify-between mt-3 pt-3 border-t-2 border-zinc-200">
+        <div className="flex items-center justify-between mt-3 pt-3 border-t-2 border-zinc-200 dark:border-zinc-800">
           {item.author && (
-            <span className="text-xs text-zinc-700 font-medium truncate max-w-[140px]">
+            <span className="text-xs text-zinc-700 dark:text-zinc-300 font-medium truncate max-w-[140px]">
               {item.author}
             </span>
           )}
           {item.publishedAt && (
-            <span className="text-xs text-zinc-500 flex items-center gap-1">
+            <span className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               {formatDate(item.publishedAt)}
             </span>
@@ -254,10 +254,10 @@ const folderItems = folders.map(folder => ({
   return (
     <div className="space-y-6">
       {folderItems.map(({ folder, episodes: folderEpisodes }) => (
-        <div key={folder.id} className="border-2 border-zinc-900 bg-white overflow-hidden">
+        <div key={folder.id} className="border-2 border-zinc-900 dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden">
           <div
             onClick={() => handleMediaClick(folder)}
-            className="flex items-center gap-3 p-4 bg-cyan-400 cursor-pointer hover:bg-cyan-300 transition-colors"
+            className="flex items-center gap-3 p-4 bg-cyan-400 cursor-pointer hover:bg-cyan-300 dark:hover:bg-cyan-500 transition-colors"
           >
             {expandedFolders.has(folder.id) ? (
               <ChevronDown className="w-6 h-6 text-zinc-900" />
@@ -267,7 +267,7 @@ const folderItems = folders.map(folder => ({
             <Folder className="w-8 h-8 text-zinc-900" />
             <div className="flex-1">
               <h3 className="text-zinc-900 font-bold text-lg">{folder.title}</h3>
-              <p className="text-zinc-700 text-sm">{folder.description}</p>
+              <p className="text-zinc-700 text-sm line-clamp-1">{folder.description}</p>
             </div>
             <span className="text-zinc-900 font-bold text-sm">
               {folderEpisodes.length} episodios
@@ -275,7 +275,7 @@ const folderItems = folders.map(folder => ({
           </div>
           
           {expandedFolders.has(folder.id) && folderEpisodes.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 bg-zinc-50">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 bg-zinc-50 dark:bg-zinc-950">
               {folderEpisodes.map((episode) => (
                 <MediaCard 
                   key={episode.id} 
@@ -287,7 +287,7 @@ const folderItems = folders.map(folder => ({
           )}
           
           {expandedFolders.has(folder.id) && folderEpisodes.length === 0 && (
-            <div className="p-4 bg-zinc-50 text-zinc-500 text-center">
+            <div className="p-4 bg-zinc-50 dark:bg-zinc-950 text-zinc-500 dark:text-zinc-400 text-center">
               No hay episodios disponibles para esta temporada
             </div>
           )}

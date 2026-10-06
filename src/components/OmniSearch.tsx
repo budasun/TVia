@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, Film, Microscope, Music, Podcast, Clock, Calendar, ChevronDown, Drama, Clapperboard, Palette, GraduationCap, Tv, UtensilsCrossed, BookOpen, Newspaper, Sun, Moon } from 'lucide-react';
 import type { CategoryFilter, DurationFilter, UploadDateFilter, SearchFilters } from '@/types';
@@ -59,17 +59,16 @@ export default function OmniSearch({
   const [showDurationDropdown, setShowDurationDropdown] = useState(false);
   const [showDateDropdown, setShowDateDropdown] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const themeHydrated = useRef(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark');
-    } else {
-      setIsDarkMode(true);
-    }
+    const isDark = document.documentElement.classList.contains('dark');
+    setIsDarkMode(isDark);
+    themeHydrated.current = true;
   }, []);
 
   useEffect(() => {
+    if (!themeHydrated.current) return;
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     if (isDarkMode) {
       document.documentElement.classList.add('dark');

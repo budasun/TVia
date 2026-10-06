@@ -16,12 +16,12 @@ function SkeletonGrid({ count = 8 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="bg-white border-2 border-zinc-900 overflow-hidden">
-          <div className="aspect-video bg-zinc-200 animate-pulse" />
+        <div key={i} className="bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-zinc-700 overflow-hidden">
+          <div className="aspect-video bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
           <div className="p-4 space-y-3">
-            <div className="h-4 bg-zinc-200 animate-pulse w-3/4 rounded" />
-            <div className="h-3 bg-zinc-200 animate-pulse w-full rounded" />
-            <div className="h-3 bg-zinc-200 animate-pulse w-2/3 rounded" />
+            <div className="h-4 bg-zinc-200 dark:bg-zinc-800 animate-pulse w-3/4 rounded" />
+            <div className="h-3 bg-zinc-200 dark:bg-zinc-800 animate-pulse w-full rounded" />
+            <div className="h-3 bg-zinc-200 dark:bg-zinc-800 animate-pulse w-2/3 rounded" />
           </div>
         </div>
       ))}
@@ -216,7 +216,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
-      <header className="pt-20 pb-12 px-6 border-b-2 border-zinc-900 flex flex-col items-center transition-colors">
+      <header className="pt-20 pb-12 px-6 border-b-2 border-zinc-900 dark:border-zinc-800 flex flex-col items-center transition-colors">
         <div className="w-full max-w-7xl mx-auto flex flex-col items-center text-center">
             <motion.h1 
             className="font-black uppercase tracking-tight leading-none mb-6 flex items-baseline justify-center"
@@ -260,7 +260,7 @@ export default function Home() {
                     +
                   </motion.button>
                 )}
-                <span className="text-sm font-bold text-zinc-500 bg-zinc-100 px-3 py-1 border-2 border-zinc-300 select-none">
+                <span className="text-sm font-bold text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-3 py-1 border-2 border-zinc-300 dark:border-zinc-700 select-none">
                   {searchResults.length} videos
                 </span>
               </div>
@@ -304,8 +304,8 @@ export default function Home() {
               </motion.div>
             ) : (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-                <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-900 p-8 max-w-md mx-auto shadow-[4px_4px_0px_#D946EF]">
-                  <p className="text-zinc-600 font-medium">
+                <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-zinc-700 p-8 max-w-md mx-auto shadow-[4px_4px_0px_#D946EF]">
+                  <p className="text-zinc-600 dark:text-zinc-400 font-medium">
                     No se encontraron resultados. Intenta con otra busqueda.
                   </p>
                 </div>
@@ -315,7 +315,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="border-t-2 border-zinc-900 pt-8 pb-[140px] md:pb-8 px-6 bg-zinc-900 text-white">
+      <footer className="border-t-2 border-zinc-800 pt-8 pb-[140px] md:pb-8 px-6 bg-zinc-900 text-white">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-zinc-400 text-sm font-medium">TutorVideoIA 2026 BY OCTAVIO TRS</p>
         </div>
